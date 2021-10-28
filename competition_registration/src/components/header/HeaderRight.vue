@@ -1,0 +1,33 @@
+<template>
+  <div>
+    <div id="headerSign" v-show="userUnloggedFLag">
+      <HeaderSign />
+    </div>
+    <div v-show="!userUnloggedFLag" id="headerLogged">
+      <HeaderLogged />
+    </div>
+  </div>
+</template>
+
+<script>
+import HeaderSign from "@/components/header/HeaderSign";
+import HeaderLogged from "@/components/header/HeaderLogged";
+export default {
+  components: {
+    HeaderSign,
+    HeaderLogged,
+  },
+  computed: {
+    userUnloggedFLag() {
+      return this.$store.getters.getUserDetails == null;
+    },
+  },
+};
+</script>
+
+<style>
+.headerLogged {
+  display: inline-block;
+  margin: 10px;
+}
+</style>

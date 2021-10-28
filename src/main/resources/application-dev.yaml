@@ -1,0 +1,6 @@
+# 开发环境
+myapp:
+  resource:
+    path:
+      avatar: D:/www/CR/UserAvatar/
+      slideshow: D:/www/CR/Slideshow/

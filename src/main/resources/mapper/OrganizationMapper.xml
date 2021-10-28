@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.etherealss.mapper.OrganizationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="pers.etherealss.pojo.po.Organization">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="profile" property="profile" />
+        <result column="affiliated_schools" property="affiliatedSchools" />
+        <result column="contact_person" property="contactPerson" />
+        <result column="contact_number" property="contactNumber" />
+    </resultMap>
+
+</mapper>
