@@ -1,4 +1,5 @@
 <template>
+<!-- 首页轮播图 -->
   <div>
     <el-carousel :interval="4000" type="card" height="300px">
       <el-carousel-item v-for="item in dataList" :key="item.id">

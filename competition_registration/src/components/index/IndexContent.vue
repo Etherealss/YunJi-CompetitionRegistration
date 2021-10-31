@@ -27,22 +27,13 @@ export default {
   methods: {
     getPageData(curPage) {
       this.$axios
-        .get(
-          process.env.VUE_APP_BASE_API + "/competitions/pages/" + curPage,
-          {},
-          {
-            headers: {
-              authorization: "Bearer bbbb00a2-cf9b-4296-9b3f-165e7a31568d",
-            },
-          }
-        )
+        .get("/competitions/public/pages/" + curPage)
         .then((response) => {
-          console.log(response);
-          if (response.data.code === 200) {
+          if (response.code === 200) {
             // 追加
-            this.updatePage(response.data.data);
+            this.updatePage(response.data);
           } else {
-            console.log(response.data);
+            console.log(response);
           }
         })
         .catch((error) => {

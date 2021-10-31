@@ -13,12 +13,17 @@
 import HeaderSign from "@/components/header/HeaderSign";
 import HeaderLogged from "@/components/header/HeaderLogged";
 export default {
+  data() {
+    return {
+    };
+  },
   components: {
     HeaderSign,
     HeaderLogged,
   },
   computed: {
     userUnloggedFLag() {
+      // console.log('userUnloggedFLag:', this.$store.getters.getUserDetails);
       return this.$store.getters.getUserDetails == null;
     },
   },

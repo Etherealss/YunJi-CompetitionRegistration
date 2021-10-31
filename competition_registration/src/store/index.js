@@ -2,6 +2,7 @@
 import Vue from 'vue'
 //引入Vuex
 import Vuex from 'vuex'
+import { getByStorage, setToStorage } from '@/utils/Auth.js'
 //应用Vuex插件
 Vue.use(Vuex)
 
@@ -12,32 +13,53 @@ const mutations = {
     //存储token方法
     //设置token等于外部传递进来的值
     setUserDetails(state, userDetails) {
+        // console.log('setUserDetails: ',userDetails);
         state.userDetails = userDetails;
-        //同步存储token至sessionstorage
-        /**
-         * vuex存储在内存
-         * localstorage（本地存储）则以文件的方式存储在本地,永久保存
-         * sessionstorage( 会话存储 ) ,临时保存。localStorage和sessionStorage只能存储字符串类型
-         */
-        sessionStorage.setItem("userDetails", userDetails)
+        if (userDetails != undefined) {
+            setToStorage("userDetails", JSON.stringify(userDetails))
+        }
+    },
+    setTokenDetails(state, tokenDetails) {
+        // console.log('setUserDetails: ',tokenDetails);
+        state.tokenDetails = tokenDetails;
+        if (tokenDetails != undefined) {
+            setToStorage("tokenDetails", JSON.stringify(tokenDetails))
+        }
     }
 }
 //准备state对象——保存具体的数据
 const state = {
-    // 初始化token
-    userDetails: null
+    // 用户信息
+    userDetails: null,
+    tokenDetails: null,
 }
 
 const getters = {
     //获取token方法
     //判断是否有token,如果没有重新赋值，返回给state的token
     getUserDetails: (state) => {
-        if (!state.userDetails) {
+        if (state.userDetails == null) {
             // 若vuex中无token就去sessionStorage中查找
-            state.userDetails = sessionStorage.getItem("userDetails");
+            let userDetails = getByStorage("userDetails");
+            if (userDetails != null) {
+                state.userDetails = JSON.parse(userDetails);
+            }
         }
         return state.userDetails;
-    }
+    },
+    getToken: (state) => {
+        if (state.tokenDetails == null) {
+            let tokenDetails = getByStorage("tokenDetails");
+            if (tokenDetails != null) {
+                state.tokenDetails = JSON.parse(tokenDetails);
+            }
+        }
+        if (state.tokenDetails == null || state.tokenDetails == undefined) {
+            console.error("获取不到userDetails！！！")
+            return '';
+        }
+        return state.tokenDetails.token_type + " " + state.tokenDetails.access_token;
+    },
 }
 
 //创建并暴露store

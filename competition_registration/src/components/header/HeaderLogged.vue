@@ -10,7 +10,7 @@
       </el-badge>
     </div>
     <div id="userHeaderAvatar" @click="doRoute('/users/profile')">
-      <el-avatar :size="40" :src="circleUrl"></el-avatar>
+      <el-avatar :size="40" :src="avatar"></el-avatar>
     </div>
   </div>
 </template>
@@ -19,13 +19,28 @@
 export default {
   data() {
     return {
-      circleUrl: process.env.VUE_APP_BASE_API + "/users/avatar",
+      avatar: "",
     };
   },
   methods: {
     doRoute(path) {
       this.$router.push(path);
     },
+    getAvatarData() {
+      this.$axios({
+        method: "post",
+        url: "/users/avatar",
+      }).then((response) => {
+        // 显示base64图片
+        this.avatar = "data:image/jpeg;base64," + response.data;
+      });
+    },
+  },
+  mounted() {
+    let userDetails = this.$store.getters.getUserDetails;
+    if (userDetails != null) {
+      this.getAvatarData();
+    }
   },
 };
 </script>

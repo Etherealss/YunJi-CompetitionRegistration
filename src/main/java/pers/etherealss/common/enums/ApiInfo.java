@@ -36,11 +36,13 @@ public enum ApiInfo {
     LOGIN_USER_NOT_FOUND(10202, "[登录用户不存在]"),
     USER_LOGGED(10203, "[用户已登录]"),
 
-
     CAPTCHA_MISSING(10301, "[未输入验证码]"),
     CAPTCHA_NOT_MATCH(10302, "[验证码不匹配]"),
     CAPTCHA_INVALID(10303, "[验证码已失效]"),
     CAPTCHA_ERROR(10304, "[验证码异常]"),
+
+    TOKEN_MISSING(10401, "[token缺失]"),
+    TOKEN_EXP(10402, "[token缺失]"),
     ;
 
     int code;

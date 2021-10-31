@@ -97,4 +97,18 @@ public class User implements UserDetails, Serializable {
         this.username = username;
         this.password = password;
     }
+
+    public Student getStudentInfo() {
+        if (userInfo instanceof Student) {
+            return (Student) userInfo;
+        }
+        return null;
+    }
+
+    public Official getOfficialInfo() {
+        if (userInfo instanceof Official) {
+            return (Official) userInfo;
+        }
+        return null;
+    }
 }

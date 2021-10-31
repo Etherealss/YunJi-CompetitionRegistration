@@ -4,17 +4,21 @@
       <UserTeamItem :team="teamItem" />
     </div>
     <UserAddTeamItem />
+    <UserModifyTeam ref="userModifyTeam" />
   </div>
 </template>
 
 <script>
 import UserTeamItem from "@/components/user_center/user_team/UserTeamItem";
 import UserAddTeamItem from "@/components/user_center/user_team/UserAddTeamItem";
+import UserModifyTeam from "../../components/user_center/user_team/UserModifyTeam.vue";
 export default {
-  components: { UserTeamItem, UserAddTeamItem },
+  name: "UserTeam",
+  components: { UserTeamItem, UserAddTeamItem, UserModifyTeam },
   data() {
     return {
       teamData: [
+        /*
         {
           id: 1,
           name: "你说的都队1",
@@ -185,8 +189,30 @@ export default {
             },
           ],
         },
+      */
       ],
     };
+  },
+  methods: {
+    /**
+     * 获取队伍数据
+     */
+    getTeamData() {
+      this.$axios.get("/teams/myTeams").then((data) => {
+        if (data.code == 200) {
+          this.teamData = data.data;
+        }
+      });
+    },
+    /**
+     * 想子组件传数据，打开侧面抽屉
+     */
+    setTargetModifyTeam(team) {
+      this.$refs.userModifyTeam.doModify(team);
+    }
+  },
+  mounted() {
+    this.getTeamData();
   },
 };
 </script>

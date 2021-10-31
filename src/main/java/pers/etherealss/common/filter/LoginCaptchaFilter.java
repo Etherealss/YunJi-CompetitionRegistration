@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import pers.etherealss.common.config.SecurityConfig;
+import pers.etherealss.common.config.security.SecurityConfig;
 import pers.etherealss.common.enums.AppAttribute;
 import pers.etherealss.common.exception.CaptchaException;
 import pers.etherealss.utils.captcha.CaptchaUtil;

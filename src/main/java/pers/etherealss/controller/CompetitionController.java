@@ -34,7 +34,7 @@ public class CompetitionController {
      * @param curPage
      * @return
      */
-    @GetMapping("/pages/{curPage}")
+    @GetMapping("/public/pages/{curPage}")
     public Msg<PageBo<Competition>> getPageCompetition(
             @PathVariable(value = "curPage") int curPage,
             @MatrixVariable(value = "orderBy", pathVar = "curPage", required = false) String orderBy) {

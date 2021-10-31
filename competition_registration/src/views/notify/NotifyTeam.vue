@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="notifyItemTitle">
+    <div class="notifyTeamTitle">
       {{ teamMessage.title }}
     </div>
     <div
-      class="notifyItemBody"
+      class="notifyTeamBody"
       v-for="(item, index) in teamMessage.items"
       :key="index"
     >
@@ -14,16 +14,15 @@
       <div class="notifyDetails">
         <div class="notifyUsername">{{ item.user.username }}</div>
         <div class="notifyTime">
-          <!-- {{ this.dayjs(item.notify.time) }} -->
-          {{ item.notify.time }}
+          {{ dayjs(item.notify.time).format("YYYY-MM-DD HH:mm:ss") }}
         </div>
         <div class="notifyMessage" v-if="(item.notify.type = 'requestAddTeam')">
-          请求加入你的队伍：<span class="notifyItemTarget">{{
+          请求加入你的队伍：<span class="notifyTeamTarget">{{
             item.target.name
           }}</span>
         </div>
         <div class="notifyMessage" v-else-if="(item.notify.type = 'leaveTeam')">
-          离开了你的队伍：<span class="notifyItemTarget">{{
+          离开了你的队伍：<span class="notifyTeamTarget">{{
             item.target.name
           }}</span>
         </div>
@@ -55,7 +54,7 @@ export default {
             },
             notify: {
               scope: "team",
-              type: "requestAddTeam",
+              type: "RequestAddTeam",
               message: "想加入你的队伍",
               time: new Date(),
             },
@@ -72,7 +71,7 @@ export default {
             },
             notify: {
               scope: "team",
-              type: "leaveTeam",
+              type: "LeaveTeam",
               message: "想加入你的队伍",
               time: new Date(),
             },
@@ -85,7 +84,7 @@ export default {
 </script>
 
 <style>
-.notifyItemTitle {
+.notifyTeamTitle {
   font-size: 16px;
   font-weight: 600;
   color: #222226;
@@ -94,7 +93,7 @@ export default {
   line-height: 22px;
 }
 
-.notifyItemBody {
+.notifyTeamBody {
   position: relative;
   padding: 16px 0;
   border-bottom: 1px solid #f0f0f2;
@@ -123,6 +122,7 @@ export default {
 .notifyTime {
   display: inline-block;
   margin: 0 20px 0 0;
+  font-size: 10px;
 }
 
 .notifyMessage {

@@ -1,10 +1,9 @@
 package pers.etherealss.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import pers.etherealss.pojo.po.Student;
 import pers.etherealss.pojo.po.Team;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import java.util.List;
 

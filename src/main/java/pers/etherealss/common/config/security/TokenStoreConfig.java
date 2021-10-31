@@ -1,4 +1,4 @@
-package pers.etherealss.common.security;
+package pers.etherealss.common.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

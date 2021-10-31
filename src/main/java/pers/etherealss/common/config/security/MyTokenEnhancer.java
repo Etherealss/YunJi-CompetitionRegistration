@@ -1,4 +1,4 @@
-package pers.etherealss.common.security;
+package pers.etherealss.common.config.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
@@ -22,12 +22,12 @@ public class MyTokenEnhancer implements TokenEnhancer {
     public OAuth2AccessToken enhance(OAuth2AccessToken oAuth2AccessToken,
                                      OAuth2Authentication oAuth2Authentication) {
         User principal = (User)oAuth2Authentication.getPrincipal();
-        log.debug("{}", principal);
         Map<String, Object> map = new HashMap<>();
+        map.put("id", principal.getId());
         map.put("username", principal.getUsername());
         map.put("avatar", principal.getAvatar());
         map.put("registerTime", principal.getRegisterTime());
-
+        map.put("userRole", principal.getUserRole());
         ((DefaultOAuth2AccessToken)oAuth2AccessToken).setAdditionalInformation(map);
         return oAuth2AccessToken;
     }

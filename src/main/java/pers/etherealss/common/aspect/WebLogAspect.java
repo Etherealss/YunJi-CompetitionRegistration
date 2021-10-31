@@ -35,7 +35,7 @@ public class WebLogAspect {
 
     //在方法横向的插入到切点方法执行前
     @Before(value = "webLog()")
-    public void beforeControll(JoinPoint joinPoint) throws Exception {
+    public void beforeControll(JoinPoint joinPoint) {
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert attributes != null;
@@ -46,12 +46,12 @@ public class WebLogAspect {
                 "; IP : " + request.getRemoteAddr() +
                 "; 类与方法 : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName() +
                 "; 参数 : " + Arrays.toString(joinPoint.getArgs());
-        log.info(msg);
+        log.debug(msg);
     }
 
     @AfterReturning(returning = "ret", pointcut = "webLog()")
-    public void afterControll(Object ret) throws Exception {
+    public void afterControll(Object ret) {
         // 处理完请求，返回内容
-        log.trace("处理完请求，返回内容 : " + ret);
+        log.debug("处理完请求，返回内容 : " + ret);
     }
 }

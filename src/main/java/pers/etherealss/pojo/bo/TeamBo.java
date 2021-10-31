@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
-import pers.etherealss.pojo.po.Student;
 import pers.etherealss.pojo.po.Team;
+import pers.etherealss.pojo.po.User;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -37,12 +37,12 @@ public class TeamBo implements Serializable {
     /**
      * 队长
      */
-    private Student leader;
+    private User leader;
 
     /**
      * 队员
      */
-    private List<Student> members;
+    private List<User> members;
 
     public static TeamBo init(Team team) {
         TeamBo teamBo = new TeamBo();

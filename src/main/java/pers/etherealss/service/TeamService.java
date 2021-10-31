@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import pers.etherealss.pojo.bo.TeamBo;
 import pers.etherealss.pojo.po.Team;
 
-import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -21,5 +21,7 @@ public interface TeamService extends IService<Team> {
      * @param id
      * @return
      */
-    TeamBo getTeamBo(Integer id);
+    TeamBo getTeamBo(int id);
+
+    List<TeamBo> getTeamBoByLeader(int leaderId);
 }

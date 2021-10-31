@@ -113,49 +113,80 @@ export default {
     submitLogin(formName) {
       this.$refs[formName].validate((valid) => {
         if (!valid) {
-          console.log("error submit!!");
           return false;
         }
-        // 表单格式提交数据：
-        // https://www.cnblogs.com/chcindy/p/6322809.html
-        // https://www.jianshu.com/p/fd7bf46d4412
-        // https://zhuanlan.zhihu.com/p/41948102
-        // let formPatam = new FormData()
-        // formPatam.append('username', this.loginForm.username)
-        // formPatam.append('password', this.loginForm.password)
-        // formPatam.append('captcha', this.loginForm.captcha)
-        let data = this.qs.stringify({
-          username: this.loginForm.username,
-          password: this.loginForm.password,
-          // 后台通过 loginCaptcha 获取用户输入的验证码
-          loginCaptcha: this.loginForm.captcha,
-        });
-        console.log(data);
-        // 请求后端
-        this.$axios({
-          method: "post",
-          url: "/api/users/login",
-          data,
-        })
-          .then((response) => {
-            console.log(response);
-            if (response.data.code === 200) {
-              this.$store.commit("setUserDetails", response.data.data)
-              this.$router.push({
-                name: "index",
-              });
-            } else {
-              this.renderResult(response.data);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            this.notifyException();
-          });
+        this.axiosToken();
 
         // 更新验证码
         this.changeCaptcha();
       });
+    },
+    axiosToken() {
+      let data = this.qs.stringify({
+        username: this.loginForm.username,
+        password: this.loginForm.password,
+        grant_type: "password",
+        scope: "all",
+      });
+      // 请求后端
+      this.$axios({
+        method: "post",
+        url: "/oauth/token",
+        data,
+        auth: {
+          username: "client_id",
+          password: "secret",
+        },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+        .then((response) => {
+          console.log(response);
+          this.$store.commit("setTokenDetails", response);
+          this.axiosLogin();
+        })
+        .catch(() => {});
+    },
+    axiosLogin() {
+      // 表单格式提交数据：
+      // https://www.cnblogs.com/chcindy/p/6322809.html
+      // https://www.jianshu.com/p/fd7bf46d4412
+      // https://zhuanlan.zhihu.com/p/41948102
+      let data = this.qs.stringify({
+        username: this.loginForm.username,
+        password: this.loginForm.password,
+        // 后台通过 loginCaptcha 获取用户输入的验证码
+        loginCaptcha: this.loginForm.captcha,
+      });
+      // 请求后端
+      this.$axios({
+        method: "post",
+        url: "/users/login",
+        data,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+        .then((response) => {
+          if (response.code === 200) {
+            this.$notify({
+              title: "登录成功",
+              message: "欢迎用户 " + response.data.username + " 登录！",
+              type: "success",
+              duration: 2000,
+            });
+            this.$store.commit("setUserDetails", response.data);
+            this.$router.push({
+              name: "index",
+            });
+          } else {
+            this.renderResult(response);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     /**
      * 重置表单
@@ -193,9 +224,6 @@ export default {
         } else if (code == 10202) {
           this.notifySuccess("该账号已登录，请勿重复登录！");
         }
-      }
-      if (code == 500) {
-        this.notifyException();
       }
     },
     notifyException() {

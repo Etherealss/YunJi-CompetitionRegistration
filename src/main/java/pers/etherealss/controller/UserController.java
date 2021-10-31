@@ -5,17 +5,25 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pers.etherealss.common.enums.ApiInfo;
 import pers.etherealss.common.exception.MissingParamException;
+import pers.etherealss.pojo.po.Student;
 import pers.etherealss.pojo.po.User;
 import pers.etherealss.pojo.vo.Msg;
 import pers.etherealss.service.CaptchaService;
+import pers.etherealss.service.StudentService;
 import pers.etherealss.service.UserService;
 import pers.etherealss.utils.GetParamUtil;
 import pers.etherealss.utils.TokenUtil;
 import pers.etherealss.utils.captcha.CaptchaUtil;
+import pers.etherealss.utils.simple.FileUtil;
+import pers.etherealss.utils.simple.ImgUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedInputStream;
+import java.io.IOException;
 
 /**
  * <p>
@@ -32,12 +40,15 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
+    private StudentService studentService;
+    @Autowired
     private CaptchaService captchaService;
 
-//    @PostMapping("/login")
-//    public Msg<User> login(String username, String password) {
-//        return userService.login(username, password);
-//    }
+    @PostMapping("/login")
+    public Msg<User> login(HttpServletRequest request) {
+        log.info("用户登录");
+        return Msg.ok(TokenUtil.getUserByToken(request));
+    }
 
     /**
      * 获取当前用户信息
@@ -46,7 +57,11 @@ public class UserController {
     @GetMapping("/curUser")
     public Msg<User> getCurUser(HttpServletRequest request) {
         log.trace("获取当前用户信息");
-        return Msg.ok(TokenUtil.getUserByToken(request));
+        User user = TokenUtil.getUserByToken(request);
+        user = userService.getById(user.getId());
+        Student student = studentService.getById(user.getId());
+        user.setUserInfo(student);
+        return Msg.ok(user);
     }
 
     @GetMapping("/username_exist/{username}")
@@ -59,7 +74,7 @@ public class UserController {
     /**
      * 用户注册
      */
-    @PostMapping("/register")
+    @PostMapping("/public/register")
     public Msg<User> register(HttpServletRequest request, HttpSession httpSession) {
         JSONObject jsonByJson = GetParamUtil.getJsonByJson(request);
         if (jsonByJson == null || jsonByJson.getInnerMap().size() == 0) {
@@ -76,6 +91,23 @@ public class UserController {
         Msg<User> register = userService.register(user);
 
         return register;
+    }
+
+    /**
+     * 获取头像。因为数据可能超过get的上限所以需要用post
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/avatar")
+    public Msg<String> getUserAvatarStream(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User user = TokenUtil.getUserByToken(request);
+        BufferedInputStream userAvatar = userService.getUserAvatar(user.getAvatar());
+        String data = ImgUtil.getImg4Base64(FileUtil.bytes(userAvatar));
+        Msg<String> msg = new Msg<>(ApiInfo.OK);
+        msg.setData(data);
+        return msg;
     }
 }
 

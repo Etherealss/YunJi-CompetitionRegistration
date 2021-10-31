@@ -9,7 +9,7 @@ import pers.etherealss.pojo.bo.TeamBo;
 import pers.etherealss.pojo.po.Team;
 import pers.etherealss.service.TeamService;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 @Slf4j
 @DisplayName("TeamServiceImplTest测试")
@@ -29,5 +29,11 @@ class TeamServiceImplTest {
     void testGetTeamBo() {
         TeamBo teamBo = teamService.getTeamBo(1);
         log.debug("{}", teamBo);
+    }
+
+    @Test
+    void testGetTeamBoByLeader() {
+        List<TeamBo> teamBoByLeader = teamService.getTeamBoByLeader(1);
+        log.debug("{}", teamBoByLeader);
     }
 }

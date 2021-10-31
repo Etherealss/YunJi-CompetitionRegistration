@@ -5,10 +5,6 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="pers.etherealss.pojo.po.Official">
         <id column="id" property="id" />
-        <result column="email" property="email" />
-        <result column="password" property="password" />
-        <result column="nickname" property="nickname" />
-        <result column="register_time" property="registerTime" />
         <result column="name" property="name" />
         <result column="sex" property="sex" />
         <result column="birthday" property="birthday" />

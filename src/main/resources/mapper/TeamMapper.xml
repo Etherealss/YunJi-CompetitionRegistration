@@ -4,13 +4,16 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="pers.etherealss.pojo.po.Team">
-        <id column="id" property="id" />
-        <result column="name" property="name" />
-        <result column="leader_id" property="leaderId" />
-        <result column="create_time" property="createTime" />
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="leader_id" property="leaderId"/>
+        <result column="invite_code" property="inviteCode"/>
+        <result column="create_time" property="createTime"/>
     </resultMap>
     <select id="selectTeamMembersId" resultType="int">
-        SELECT `student_id` FROM `team_member` WHERE `team_id` = #{teamId};
+        SELECT `student_id`
+        FROM `team_member`
+        WHERE `team_id` = #{teamId};
     </select>
 
 </mapper>

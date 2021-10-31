@@ -3,14 +3,20 @@
     <ul>
       <li>评论</li>
       <li>点赞</li>
-      <li>组队信息</li>
-      <li>系统通知</li>
+      <li @click="doRoute('/notify/team')">组队信息</li>
+      <li @click="doRoute('/notify/system')">系统通知</li>
     </ul>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    doRoute(path) {
+      this.$doRoute(path);
+    }
+  }
+};
 </script>
 
 <style>

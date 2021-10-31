@@ -7,14 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import pers.etherealss.common.enums.UserRole;
 import pers.etherealss.common.exception.ExistException;
 import pers.etherealss.common.exception.MismatchException;
 import pers.etherealss.common.exception.NotFoundException;
+import pers.etherealss.common.exception.ServiceException;
 import pers.etherealss.common.properties.ResourcePathProperties;
 import pers.etherealss.mapper.UserMapper;
 import pers.etherealss.pojo.po.User;
 import pers.etherealss.pojo.vo.Msg;
 import pers.etherealss.service.UserService;
+import pers.etherealss.utils.simple.FileUtil;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
 
 /**
  * <p>
@@ -64,6 +70,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         int insert = userMapper.insert(user);
 
         return Msg.ok(user);
+    }
+
+    @Override
+    public BufferedInputStream getUserAvatar(String avatar) {
+        try {
+            BufferedInputStream inputStream = FileUtil.getInputStream(
+                    resourcePathProperties.getAvatar() + avatar);
+            return inputStream;
+        } catch (IOException e) {
+            throw new ServiceException("IO异常");
+        }
     }
 
     private User getExistUser(String username) {

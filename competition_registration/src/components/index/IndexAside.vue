@@ -33,7 +33,7 @@
 export default {
   methods: {
     doRoute(path) {
-      this.$router.push(path);
+      this.$doRoute(path);
     },
   },
 };

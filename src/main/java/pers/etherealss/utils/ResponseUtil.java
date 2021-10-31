@@ -2,9 +2,8 @@ package pers.etherealss.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import pers.etherealss.pojo.vo.Msg;
-import pers.etherealss.utils.simple.IoUtil;
+import pers.etherealss.utils.simple.FileUtil;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,19 +39,6 @@ public class ResponseUtil {
      * @throws IOException
      */
     public static void sendFile(HttpServletResponse response, InputStream inputStream) throws IOException {
-        ServletOutputStream out = null;
-        try {
-            out = response.getOutputStream();
-            // 创建数据缓冲区
-            byte[] b = new byte[1024];
-            int length;
-            while ((length = inputStream.read(b)) > 0) {
-                out.write(b, 0, length);
-                out.flush();
-            }
-        } finally {
-            IoUtil.close(out);
-            IoUtil.close(inputStream);
-        }
+        FileUtil.write(inputStream, response.getOutputStream());
     }
 }

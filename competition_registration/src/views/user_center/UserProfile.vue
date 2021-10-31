@@ -37,17 +37,34 @@ export default {
   methods: {
     getCurUser() {
       this.$axios
-        .get(process.env.VUE_APP_BASE_API + "/users/curUser")
+        .get("/users/curUser")
         .then((response) => {
-          if (response.data.code === 200) {
-            let userData = response.data.data;
+          console.log(response);
+          if (response.code === 200) {
+            let userData = response.data;
             this.userProfile.items = [
               ["用户昵称", userData.username],
               ["用户ID", userData.id],
               ["邮箱", userData.email],
-              ["注册时间", this.dayjs(userData.registerTime).format("YYYY-MM-DD")],
+              [
+                "注册时间",
+                this.dayjs(userData.registerTime).format("YYYY-MM-DD"),
+              ],
             ];
-            console.log(this.userProfile.items);
+            let studentData = userData.userInfo;
+            this.studentProfile.items = [
+              ["姓名", studentData.name],
+              ["性别", studentData.sex ? "男" : "女"],
+              ["生日", this.dayjs(studentData.birthday).format("YYYY-MM-DD")],
+              ["学校", "广东金融学院"],
+              ["专业", "软件工程"],
+              [
+                "入学年分",
+                studentData.enrollmentDate == null
+                  ? "未填写"
+                  : this.dayjs(studentData.enrollmentDate).format("YYYY年MM月"),
+              ],
+            ];
           }
         })
         .catch((error) => {
@@ -57,7 +74,7 @@ export default {
   },
   mounted() {
     this.getCurUser();
-  }
+  },
 };
 </script>
 

@@ -157,7 +157,7 @@ export default {
         // 请求后端
         this.$axios({
           method: "post",
-          url: "/api/users/register",
+          url: "/api/users/public/register",
           data,
         })
           .then((response) => {

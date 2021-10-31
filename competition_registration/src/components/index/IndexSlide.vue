@@ -1,4 +1,5 @@
 <template>
+  <!-- 首页轮播图：获取数据 -->
   <Slideshow :dataList="slideshowDataList" />
 </template>
 
@@ -15,19 +16,22 @@ export default {
   },
   methods: {},
   beforeCreate() {
-    this.$axios
-      .get(process.env.VUE_APP_BASE_API + "/slideshows/index")
+    this.$axios({
+      method: "get",
+      url:"/slideshows/index",
+      headers: {
+        authorization: this.$store.getters.getToken,
+      },
+    })
       .then((response) => {
-        console.log(response);
-        if (response.data.code === 200) {
-          let dataList = response.data.data;
+        if (response.code === 200) {
+          let dataList = response.data;
           for (let item of dataList) {
-            item.filePath =
-              process.env.VUE_APP_BASE_API + "/slideshows/" + item.id;
+            item.filePath = process.env.VUE_APP_BASE_API + "/slideshows/" + item.id;
           }
           this.slideshowDataList = dataList;
         } else {
-          console.log(response.data);
+          console.log(response);
         }
       })
       .catch((error) => {

@@ -86,6 +86,7 @@ public class FileUtil {
     public static BufferedInputStream getInputStream(String filePath) throws IOException {
         return getInputStream(file(filePath));
     }
+
     /**
      * 获得一个输入流对象
      * @param file 文件
@@ -95,5 +96,49 @@ public class FileUtil {
     public static BufferedInputStream getInputStream(File file) throws IOException {
         final InputStream out = new FileInputStream(file);
         return IoUtil.toBuffered(out);
+    }
+
+    /**
+     * 将in中的数据通过out流输出
+     * @param in
+     * @param out
+     * @throws IOException
+     */
+    public static void write(InputStream in, OutputStream out) throws IOException {
+        try {
+            // 创建数据缓冲区
+            byte[] b = new byte[1024];
+            int length;
+            while ((length = in.read(b)) > 0) {
+                out.write(b, 0, length);
+                out.flush();
+            }
+        } finally {
+            IoUtil.close(out);
+            IoUtil.close(in);
+        }
+    }
+
+    /**
+     * 将inputStream转为bytes
+     * @param in
+     * @return
+     * @throws IOException
+     */
+    public static byte[] bytes(InputStream in) throws IOException {
+        ByteArrayOutputStream swapStream = null;
+        // 读取图片字节数组
+        try {
+            swapStream = new ByteArrayOutputStream();
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+            int rc = 0;
+            while ((rc = in.read(buffer, 0, bufferSize)) > 0) {
+                swapStream.write(buffer, 0, rc);
+            }
+            return swapStream.toByteArray();
+        } finally {
+            IoUtil.close(swapStream);
+        }
     }
 }

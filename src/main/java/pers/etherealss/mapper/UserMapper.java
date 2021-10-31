@@ -1,9 +1,9 @@
 package pers.etherealss.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import pers.etherealss.pojo.po.User;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import java.util.List;
 
@@ -38,5 +38,4 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
     List<String> selectUserPermissions(@Param("username") String username);
-
 }

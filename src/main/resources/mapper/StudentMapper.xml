@@ -4,23 +4,34 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="pers.etherealss.pojo.po.Student">
-        <id column="id" property="id" />
-        <result column="username" property="username" />
-        <result column="password" property="password" />
-        <result column="email" property="email" />
-        <result column="nickname" property="nickname" />
-        <result column="register_time" property="registerTime" />
-        <result column="name" property="name" />
-        <result column="sex" property="sex" />
-        <result column="birthday" property="birthday" />
-        <result column="id_card_no" property="idCardNo" />
-        <result column="introduction" property="introduction" />
-        <result column="enrollment_year" property="enrollmentYear" />
-        <result column="major" property="major" />
-        <result column="class_no" property="classNo" />
-        <result column="stu_no" property="stuNo" />
-        <result column="school_id" property="schoolId" />
-        <result column="school_name" property="schoolName" />
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="birthday" property="birthday"/>
+        <result column="id_card_no" property="idCardNo"/>
+        <result column="introduction" property="introduction"/>
+        <result column="enrollment_date" property="enrollmentDate"/>
+        <result column="major" property="major"/>
+        <result column="class_no" property="classNo"/>
+        <result column="stu_no" property="stuNo"/>
+        <result column="school_id" property="schoolId"/>
+        <result column="school_name" property="schoolName"/>
     </resultMap>
+    <select id="selectStudentProfileById" resultType="pers.etherealss.pojo.po.Student">
+        SELECT `id`, `name`, `sex`, `school_name`
+        FROM `student`
+        WHERE `id` = #{studentId};
+    </select>
+    <select id="selectStudentsProfileById" resultType="pers.etherealss.pojo.po.Student">
+        <if test="ids != null and ids.size() > 0">
+            <foreach collection="ids"
+                     open="SELECT `id`, `name`, `sex`, `school_name` FROM `student`WHERE `id` IN ("
+                     close=")"
+                     item="id"
+                     separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
 
 </mapper>

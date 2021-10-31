@@ -1,4 +1,4 @@
-package pers.etherealss.common.config;
+package pers.etherealss.common.config.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +103,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         // 放行Oauth2的API
                         "/oauth/**",
                         "/index.html",
-                        "/login.html",
                         "/captcha",
                         LOGIN_URL,
                         "/users/register",

@@ -1,4 +1,4 @@
-package pers.etherealss.common.security;
+package pers.etherealss.common.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,6 +30,15 @@ import java.util.List;
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
+    /**
+     * token过期时间（秒）
+     */
+    private static final int TOKEN_VALIDITY_SECONDS = 60 * 60 * 10;
+    /**
+     * token刷新时间
+     */
+    private static final int REFRESH_TOKEN_TIME = 60 * 60 * 10;
+    private static final String PASSWORD = "secret";
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -76,11 +85,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 // 授权用户的操作权限（授权范围）
                 .scopes("all")
                 // 客户端密码，需要加密。否则会报错：Encoded password does not look like BCrypt
-                .secret(passwordEncoder.encode("secret"))
+                .secret(passwordEncoder.encode(PASSWORD))
                 // token有效期为3600秒
-                .accessTokenValiditySeconds(3600)
+                .accessTokenValiditySeconds(TOKEN_VALIDITY_SECONDS)
                 // 刷新token有效期为7200秒
-                .refreshTokenValiditySeconds(7200)
+                .refreshTokenValiditySeconds(REFRESH_TOKEN_TIME)
                 // 重定向地址，用户获取授权码
                 .redirectUris("http://www.baidu.com");
     }
