@@ -37,7 +37,6 @@ export default {
 #indexBody {
   width: 1200px;
   margin: 35px auto;
-  overflow-y: auto;
   min-height: 1000px;
 }
 
@@ -46,15 +45,12 @@ export default {
   justify-content: flex-start;
 }
 
-/* #indexContent {
-
-} */
-
 #indexAside {
   position: -webkit-sticky;
   position: sticky;
-  top: 5px;
-  left: 1000px;
+  top: 85px;
+  left: 1113px;
+  height: 360px;
 }
 /* #indexContent {
   float: left;

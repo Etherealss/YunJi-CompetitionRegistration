@@ -12,5 +12,5 @@ import pers.etherealss.pojo.po.Registration;
  * @since 2021-10-03
  */
 public interface RegistrationService extends IService<Registration> {
-
+    void registerCompetition(Integer teamId, Integer competitionId);
 }

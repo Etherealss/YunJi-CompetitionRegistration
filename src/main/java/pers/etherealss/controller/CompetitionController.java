@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pers.etherealss.common.enums.PageOrderBy;
 import pers.etherealss.common.exception.ErrorParamException;
+import pers.etherealss.common.exception.MissingParamException;
+import pers.etherealss.common.exception.NotFoundException;
 import pers.etherealss.pojo.bo.PageBo;
 import pers.etherealss.pojo.po.Competition;
 import pers.etherealss.pojo.vo.Msg;
@@ -29,27 +31,6 @@ public class CompetitionController {
     @Autowired
     private CompetitionService competitionService;
 
-    /**
-     * 获取分页数据
-     * @param curPage
-     * @return
-     */
-    @GetMapping("/public/pages/{curPage}")
-    public Msg<PageBo<Competition>> getPageCompetition(
-            @PathVariable(value = "curPage") int curPage,
-            @MatrixVariable(value = "orderBy", pathVar = "curPage", required = false) String orderBy) {
-        log.debug("获取分页数据：当前页curPage = {}, orderBy = {}", curPage, orderBy);
-        PageBo<Competition> page = null;
-        if (orderBy == null) {
-            page = competitionService.getPage(curPage, PAGE_SIZE);
-        } else if (PageOrderBy.TIME.equals(orderBy)){
-            page = competitionService.getPageByTime(curPage, PAGE_SIZE);
-        } else {
-            throw new ErrorParamException("不支持的orderBy格式");
-        }
-        return Msg.ok(page);
-    }
-
     /*
        1.  使用;连接矩阵变量。请求路径写成：/cars/sell;low=34;brand=byd,audi,yd
        如果你的一个属性有多个值，有两种写法：
@@ -63,5 +44,40 @@ public class CompetitionController {
            可以给@MatrixVariable指定pathVar参数：
            @MatrixVariable(value = "age", pathVal = "bossId")
     */
+
+    /**
+     * 获取分页数据
+     * @param curPage
+     * @return
+     */
+    @GetMapping("/public/pages/{curPage}")
+    public Msg<PageBo<Competition>> getPageCompetition(
+            @PathVariable(value = "curPage") int curPage,
+            @MatrixVariable(value = "orderBy", pathVar = "curPage", required = false) String orderBy) {
+        log.debug("获取分页数据：当前页curPage = {}, orderBy = {}", curPage, orderBy);
+        PageBo<Competition> page = null;
+        if (orderBy == null) {
+            page = competitionService.getPage(curPage, PAGE_SIZE);
+        } else if (PageOrderBy.TIME.equals(orderBy)) {
+            page = competitionService.getPageByTime(curPage, PAGE_SIZE);
+        } else {
+            throw new ErrorParamException("不支持的orderBy格式");
+        }
+        return Msg.ok(page);
+    }
+
+    @GetMapping("/public/{id}")
+    public Msg<Competition> getCompetition(@PathVariable String id) {
+        log.debug("获取比赛信息：{}", id);
+        if (id == null) {
+            throw new MissingParamException("获取比赛信息参数缺失");
+        }
+        Competition competition = competitionService.getById(id);
+        if (competition == null) {
+            throw new NotFoundException("没有比赛：" + id + " 的数据");
+        }
+        return Msg.ok(competition);
+    }
+
 }
 

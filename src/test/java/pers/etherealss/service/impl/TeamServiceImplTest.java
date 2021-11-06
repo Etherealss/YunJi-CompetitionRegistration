@@ -36,4 +36,16 @@ class TeamServiceImplTest {
         List<TeamBo> teamBoByLeader = teamService.getTeamBoByLeader(1);
         log.debug("{}", teamBoByLeader);
     }
+
+    @Test
+    void testgetJoinedTeamBo() {
+        List<TeamBo> joinedTeamBo = teamService.getJoinedTeamBo(2);
+        joinedTeamBo.forEach((teamBo -> log.debug("{}", teamBo)));
+    }
+
+    @Test
+    void testGetByInviteCode() {
+        Team invite_code_123124 = teamService.getByInviteCode("invite_code_123124");
+        System.out.println(invite_code_123124);
+    }
 }

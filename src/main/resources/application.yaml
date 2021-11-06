@@ -2,7 +2,6 @@
 server:
   port: 8081
 
-
 spring:
   # 环境
   profiles:
@@ -83,3 +82,5 @@ mybatis-plus:
     map-underscore-to-camel-case: true
 logging:
   config: classpath:log4j2-spring.xml
+  level:
+    pers.etherealss: warn

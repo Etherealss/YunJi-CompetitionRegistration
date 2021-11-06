@@ -35,13 +35,15 @@ export default {
       this.$prompt("请输入邀请码", "加入现有队伍", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        inputPattern: /^[A-Za-z0-9]+$/,
+        inputPattern: /^[A-Za-z0-9]{32}$/,
         inputErrorMessage: "格式不正确",
       }).then(({ value }) => {
         console.log(value);
+        this.addByInviteCode(value);
       });
     },
     createNewTeam() {
+      // 信息检验
       this.$prompt("请输入队伍名称（3到15字）", "创建新队伍", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -49,9 +51,73 @@ export default {
         inputErrorMessage: "格式不正确",
       }).then(({ value }) => {
         console.log(value);
+        // 发送请求 创建队伍
+        this.$axios({
+          method: "post",
+          url: "/teams/create",
+          data: value,
+        })
+          .then((response) => {
+            // 响应
+            if (response.code === 200) {
+              // 子组件调用父组件的方法，刷新页面
+              this.$emit("getTeamData");
+              this.$notify({
+                title: "创建成功",
+                message: "队伍 " + value + " 创建成功！",
+                type: "success",
+                duration: 2000,
+              });
+            } else {
+              this.renderResult(response);
+              this.$notify.error({
+                title: "创建失败",
+                message: "队伍 " + value + " 创建失败！",
+                duration: 2000,
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            this.$notify({
+              title: "创建失败",
+              message: "队伍 " + value + " 创建失败！",
+              type: "error",
+              duration: 2000,
+            });
+          });
       });
     },
-    addByInviteCode() {},
+    /**
+     * 发送请求 加入队伍
+     */
+    addByInviteCode(inviteCode) {
+      this.$axios({
+        method: "post",
+        url: "/teams/addByInviteCode",
+        data: inviteCode,
+      }).then((resp) => {
+        if (resp.code == 200) {
+          this.$notify.success({
+            title: "申请发送成功",
+            message: "申请发送成功！",
+            duration: 2000,
+          });
+        } else if (resp.code == 404) {
+          this.$notify.warning({
+            title: "申请失败",
+            message: "邀请码不存在",
+            duration: 2000,
+          });
+        } else if (resp.code == 10501) {
+          this.$notify.warning({
+            title: "申请失败",
+            message: "你已在队伍中",
+            duration: 2000,
+          });
+        }
+      });
+    },
   },
 };
 </script>

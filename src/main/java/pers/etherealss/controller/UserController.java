@@ -14,6 +14,7 @@ import pers.etherealss.service.CaptchaService;
 import pers.etherealss.service.StudentService;
 import pers.etherealss.service.UserService;
 import pers.etherealss.utils.GetParamUtil;
+import pers.etherealss.utils.ResponseUtil;
 import pers.etherealss.utils.TokenUtil;
 import pers.etherealss.utils.captcha.CaptchaUtil;
 import pers.etherealss.utils.simple.FileUtil;
@@ -46,7 +47,7 @@ public class UserController {
 
     @PostMapping("/login")
     public Msg<User> login(HttpServletRequest request) {
-        log.info("用户登录");
+        log.info("用户登录，获取信息");
         return Msg.ok(TokenUtil.getUserByToken(request));
     }
 
@@ -88,9 +89,9 @@ public class UserController {
         String userInputCaptcha = jsonByJson.getString("captcha");
         CaptchaUtil.checkCaptcha(userInputCaptcha, request);
 
-        Msg<User> register = userService.register(user);
+        User register = userService.register(user);
 
-        return register;
+        return Msg.ok(register);
     }
 
     /**
@@ -108,6 +109,23 @@ public class UserController {
         Msg<String> msg = new Msg<>(ApiInfo.OK);
         msg.setData(data);
         return msg;
+    }
+
+    /**
+     * 获取其他用户的头像
+     * @param response
+     * @param avatarPath
+     * @return
+     * @throws IOException
+     */
+    @GetMapping("/public/avatar/{avatarPath}")
+    public void getUserAvatarStream(HttpServletResponse response, @PathVariable String avatarPath) throws IOException {
+        BufferedInputStream userAvatar = userService.getUserAvatar(avatarPath);
+        ResponseUtil.sendFile(response, userAvatar);
+//        String data = ImgUtil.getImg4Base64(FileUtil.bytes(userAvatar));
+//        Msg<String> msg = new Msg<>(ApiInfo.OK);
+//        msg.setData(data);
+//        return msg;
     }
 }
 

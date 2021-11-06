@@ -47,6 +47,11 @@ header {
   height: 65px;
   min-width: 1000px;
   box-shadow: 1px 1px 10px rgb(0 0 0 / 10%);
+  /* 跟随页面 */
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 99;
 }
 
 #systemNameBox span {

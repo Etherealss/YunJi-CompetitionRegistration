@@ -26,7 +26,7 @@ public class CodeGenerator {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/competition_registration?useUnicode=true&useSSL=false&characterEncoding=utf8";
     private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String[] TABLE_NAMES = new String[]{
-            "notification"
+            "notification_container"
 //            "student", "official", "user"
 //        "competition", "group", "group_result", "organization",
 //        "process", "registration", "school", "team",

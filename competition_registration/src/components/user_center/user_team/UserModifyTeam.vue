@@ -3,8 +3,7 @@
   <el-drawer
     title="修改队伍信息"
     :visible.sync="showModifyDrawer"
-    :before-close="handleClose"
-    ref="modifyDrawer"
+    :before-close="cancelForm"
   >
     <div>
       <!-- 修改队伍 表单 -->
@@ -12,6 +11,18 @@
         <!-- 队名 -->
         <el-form-item label="队伍名称" :label-width="formLabelWidth">
           <el-input v-model="modifyForm.teamName" autocomplete="off"></el-input>
+        </el-form-item>
+        <!-- 邀请码 -->
+        <el-form-item label="邀请码" :label-width="formLabelWidth">
+          {{ team.inviteCode }}
+        </el-form-item>
+        <!-- 队伍成员 无 -->
+        <el-form-item
+          label="队伍成员"
+          :label-width="formLabelWidth"
+          v-show="team.members.length == 0"
+        >
+          无
         </el-form-item>
         <!-- 队伍成员 多选框 -->
         <el-form-item
@@ -40,13 +51,10 @@
         </el-form-item>
       </el-form>
       <div id="formButtons">
-        <el-button @click="cancelForm">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="$refs.modifyDrawer.closeDrawer()"
-          :loading="loading"
-          >{{ loading ? "提交中 ..." : "确 定" }}</el-button
-        >
+        <el-button @click="cancelForm">关 闭</el-button>
+        <el-button type="primary" @click="handleSave" :loading="loading">{{
+          loading ? "提交中 ..." : "修 改"
+        }}</el-button>
       </div>
     </div>
   </el-drawer>
@@ -114,8 +122,7 @@ export default {
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.team.members.length;
     },
-    // 关闭drawer
-    handleClose() {
+    handleSave() {
       this.$confirm("保存修改并关闭？", "确认", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -147,4 +154,8 @@ export default {
 </script>
 
 <style>
+#el-drawer__title span {
+  font-weight: 600;
+  font-size: 18px;
+}
 </style>

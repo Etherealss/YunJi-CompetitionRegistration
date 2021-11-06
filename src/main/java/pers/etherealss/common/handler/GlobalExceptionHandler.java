@@ -24,11 +24,20 @@ import java.lang.UnsupportedOperationException;
 public class GlobalExceptionHandler {
 
     /**
+     * 业务错误
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(SimpleException.class)
+    public Msg<Object> handleSimpleServiceException(SimpleException e) {
+        return new Msg<>(e.getCode(), e.getMessage());
+    }
+
+    /**
      * 不支持的操作
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UnsupportedOperationException.class)
-    public Msg<Object> businessException(UnsupportedOperationException e) {
+    public Msg<Object> handleUnsupportedOperationException(UnsupportedOperationException e) {
         log.info("[全局异常处理器]不支持的操作：" + e.getMessage());
         return new Msg<>(e);
     }
@@ -38,7 +47,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingParamException.class)
-    public Msg<Object> businessException(MissingParamException e) {
+    public Msg<Object> handleMissingParamException(MissingParamException e) {
         log.info("[全局异常处理器]参数缺失：" + e.getMessage());
         return new Msg<>(e);
     }
@@ -48,7 +57,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ErrorParamException.class)
-    public Msg<Object> businessException(ErrorParamException e) {
+    public Msg<Object> handleErrorParamException(ErrorParamException e) {
         log.info("[全局异常处理器]参数异常：" + e.getMessage());
         return new Msg<>(e);
     }
@@ -58,7 +67,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(MismatchException.class)
-    public Msg<Object> businessException(MismatchException e) {
+    public Msg<Object> handleMismatchException(MismatchException e) {
         log.info("[全局异常处理器]不匹配异常：" + e.getMessage());
         return new Msg<>(e);
     }
@@ -68,7 +77,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(ExistException.class)
-    public Msg<Object> handleAccountExpiredException(ExistException e) {
+    public Msg<Object> handleExistException(ExistException e) {
         return new Msg<>(e);
     }
 

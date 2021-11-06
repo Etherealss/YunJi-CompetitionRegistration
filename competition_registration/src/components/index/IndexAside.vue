@@ -1,31 +1,65 @@
 <template>
-  <div id="indexAsideBox">
-    <ul>
-      <li @click="doRoute('/users/entered')">
-        <div>
-          <img src="@/assets/icon/my_competitions.png" />
-        </div>
-        <span>我的比赛</span>
-      </li>
-      <li>
-        <div>
-          <img src="@/assets/icon/my_draft.png" />
-        </div>
-        <span>草稿箱</span>
-      </li>
-      <li @click="doRoute('/users/watched')">
-        <div>
-          <img src="@/assets/icon/my_attention.png" />
-        </div>
-        <span>我的关注</span>
-      </li>
-      <li @click="doRoute('/users/teams')">
-        <div>
-          <img src="@/assets/icon/my_group.png" />
-        </div>
-        <span>我的队伍</span>
-      </li>
-    </ul>
+  <div>
+    <div v-show="isOfficial()">
+      <div id="indexAsideBox">
+        <ul>
+          <li @click="doRoute('/competition/create')">
+            <div>
+              <img src="@/assets/icon/publish.png" />
+            </div>
+            <span>发布新赛事</span>
+          </li>
+          <li>
+            <div>
+              <img src="@/assets/icon/my_draft.png" />
+            </div>
+            <span>草稿箱</span>
+          </li>
+          <li>
+            <div>
+              <img src="@/assets/icon/my_published.png" />
+            </div>
+            <span>我的发布</span>
+          </li>
+          <li @click="doRoute('/notify/competitions')">
+            <div>
+              <img src="@/assets/icon/competition_message.png" />
+            </div>
+            <span>赛事信息</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div v-show="!isOfficial()">
+      <div id="indexAsideBox">
+        <ul>
+          <li @click="doRoute('/users/entered')">
+            <div>
+              <img src="@/assets/icon/my_competitions.png" />
+            </div>
+            <span>我的比赛</span>
+          </li>
+          <li>
+            <div>
+              <img src="@/assets/icon/my_draft.png" />
+            </div>
+            <span>草稿箱</span>
+          </li>
+          <li @click="doRoute('/users/watched')">
+            <div>
+              <img src="@/assets/icon/my_attention.png" />
+            </div>
+            <span>我的关注</span>
+          </li>
+          <li @click="doRoute('/users/teams')">
+            <div>
+              <img src="@/assets/icon/my_group.png" />
+            </div>
+            <span>我的队伍</span>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -34,6 +68,9 @@ export default {
   methods: {
     doRoute(path) {
       this.$doRoute(path);
+    },
+    isOfficial() {
+      return this.$store.getters.isOfficial;
     },
   },
 };

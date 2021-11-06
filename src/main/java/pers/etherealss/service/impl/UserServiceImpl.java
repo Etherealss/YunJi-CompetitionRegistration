@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-import pers.etherealss.common.enums.UserRole;
 import pers.etherealss.common.exception.ExistException;
 import pers.etherealss.common.exception.MismatchException;
 import pers.etherealss.common.exception.NotFoundException;
@@ -39,7 +38,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Override
     public Msg<User> login(String username, String password) {
         System.out.println("用户登录" + username);
         log.debug("用户登录：{}", username);
@@ -53,7 +51,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Msg<User> register(User user) {
+    public User register(User user) {
         User existUser = userMapper.selectUserByUsername(user.getUsername());
         if (existUser != null) {
             throw new ExistException("用户名已存在");
@@ -69,7 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         int insert = userMapper.insert(user);
 
-        return Msg.ok(user);
+        return user;
     }
 
     @Override

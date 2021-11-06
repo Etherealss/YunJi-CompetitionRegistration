@@ -16,6 +16,8 @@ import UserTeam from '@/views/user_center/UserTeam'
 import Notify from '@/views/notify/Notify'
 import NotifyTeam from '@/views/notify/NotifyTeam'
 import NotifySystem from '@/views/notify/NotifySystem'
+import NotifyCompetition from '@/views/notify/NotifyCompetition'
+import Competition from '@/views/competition/Competition'
 
 // https://blog.csdn.net/qq_29252021/article/details/109615753
 // 缓存原型上的push函数
@@ -96,12 +98,22 @@ const router = new VueRouter({
 					path: "system",
 					component: NotifySystem,
 				},
+				{
+					path: "competition",
+					component: NotifyCompetition,
+				},
 			]
+		},
+		{
+			path: '/competitions/:id',
+			component: Competition,
 		},
 	]
 })
 
+// 路由守卫
 router.beforeEach((to, from, next) => {
+	// 路由前 登录检查
 	routerLoginInterceptor.routerLoginInterceptor(router, to, from, next, myStore);
 })
 

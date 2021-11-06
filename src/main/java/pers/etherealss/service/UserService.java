@@ -3,7 +3,6 @@ package pers.etherealss.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import pers.etherealss.pojo.po.User;
-import pers.etherealss.pojo.vo.Msg;
 
 import java.io.BufferedInputStream;
 
@@ -17,9 +16,7 @@ import java.io.BufferedInputStream;
  */
 public interface UserService extends IService<User> {
 
-    Msg<User> login(String username, String password);
-
-    Msg<User> register(User user);
+    User register(User user);
 
     BufferedInputStream getUserAvatar(String avatar);
 }

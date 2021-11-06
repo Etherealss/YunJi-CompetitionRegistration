@@ -15,4 +15,7 @@ public class AppAttribute {
     public static final String CAPTCHAC_CACHE = "captcha";
 
     public static final String LOGIN_CAPTCHAC_PARAM = "loginCaptcha";
+
+    public static final String AVATAR_REQUEST_PATH = "/users/public/avatar/";
+
 }

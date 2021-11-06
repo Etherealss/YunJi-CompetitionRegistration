@@ -39,6 +39,11 @@ public class Registration implements Serializable {
     @TableField(exist = false)
     private Competition competition;
 
+    public Registration(Integer teamId, Integer competitionId) {
+        this.teamId = teamId;
+        this.competitionId = competitionId;
+    }
 
-
+    public Registration() {
+    }
 }

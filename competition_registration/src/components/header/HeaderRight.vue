@@ -23,7 +23,6 @@ export default {
   },
   computed: {
     userUnloggedFLag() {
-      // console.log('userUnloggedFLag:', this.$store.getters.getUserDetails);
       return this.$store.getters.getUserDetails == null;
     },
   },

@@ -1,32 +1,33 @@
 <template>
-  <el-card class="compBox" shadow="hover">
-    <h3>{{ comp.name }}</h3>
-    <p>{{ comp.profile }}</p>
-    <div>
-      <!-- 发布组织 -->
-      <div class="compOrganization">
-        <span>{{ comp.organizationName }}</span>
+  <div @click="doRoute('/competitions/' + comp.id)">
+    <el-card class="compBox" shadow="hover">
+      <h3>{{ comp.name }}</h3>
+      <p>{{ comp.profile }}</p>
+      <div>
+        <!-- 发布组织 -->
+        <div class="compOrganization">
+          <span>{{ comp.organizationName }}</span>
+        </div>
+        <!-- 修改时间 -->
+        <div class="compUpdateTime">
+          <span>{{
+            this.dayjs(comp.updateTime).format("YYYY-MM-DD HH:mm:ss")
+          }}</span>
+        </div>
+        <!-- 点赞 -->
+        <div class="compLike">
+          <img class="likeImg" src="@/assets/icon/like.png" alt="点赞" />
+          <span>61赞</span>
+        </div>
       </div>
-      <!-- 修改时间 -->
-      <div class="compUpdateTime">
-        <span>{{
-          this.dayjs(comp.updateTime).format("YYYY-MM-DD HH:mm:ss")
-        }}</span>
-      </div>
-      <!-- 点赞 -->
-      <div class="compLike">
-        <img class="likeImg" src="@/assets/icon/like.png" alt="点赞" />
-        <span>61赞</span>
-      </div>
-    </div>
-  </el-card>
+    </el-card>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
-    return {
-    };
+    return {};
   },
   props: {
     comp: {
@@ -34,6 +35,12 @@ export default {
       profile: { type: String, require: true },
       organizationName: { type: String, require: true },
       updateTime: { type: Date, require: true },
+    },
+  },
+  methods: {
+    doRoute(path) {
+      console.log(path);
+      this.$doRoute(path);
     },
   },
 };
@@ -49,10 +56,10 @@ export default {
   margin: 20px 0;
   padding: 8px 20px 10px 20px;
 }
-/* 
+
 .compBox:hover {
-  background-color: rgb(247, 247, 247);
-} */
+  cursor: pointer;
+}
 
 .compBox h3 {
   display: inline-block;

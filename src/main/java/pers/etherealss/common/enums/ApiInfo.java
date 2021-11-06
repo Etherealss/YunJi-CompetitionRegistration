@@ -43,6 +43,10 @@ public enum ApiInfo {
 
     TOKEN_MISSING(10401, "[token缺失]"),
     TOKEN_EXP(10402, "[token缺失]"),
+
+    TEAM_HAS_JIONED(10501, "[用户已经在队伍中]"),
+
+    TEAM_HAS_REGISTER(10601, "[队伍已报名]"),
     ;
 
     int code;

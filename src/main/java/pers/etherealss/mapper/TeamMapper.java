@@ -24,4 +24,26 @@ public interface TeamMapper extends BaseMapper<Team> {
      * @return
      */
     List<Integer> selectTeamMembersId(@Param("teamId") Integer teamId);
+
+    /**
+     * 查询某一个队员所在的所有队伍
+     * @param userId
+     * @return
+     */
+    List<Team> selectTeamsByMemberId(@Param("userId") Integer userId);
+
+    /**
+     * 检查用户是否在队伍中
+     * @param userId
+     * @param teamId
+     * @return
+     */
+    Long selectExistMemberInTeam(@Param("userId") Integer userId, @Param("teamId") Integer teamId);
+
+    /**
+     * 队伍添加新成员
+     * @param teamId
+     * @param memberId
+     */
+    void insertNewMember(@Param("teamId") Integer teamId, @Param("memberId") Integer memberId);
 }

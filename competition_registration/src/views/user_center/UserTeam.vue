@@ -3,7 +3,8 @@
     <div v-for="teamItem in teamData" :key="teamItem.id">
       <UserTeamItem :team="teamItem" />
     </div>
-    <UserAddTeamItem />
+    <!-- 为子组件绑定请求，如果在子组件中创建了新队伍，可以调用父组件的方法刷新页面 -->
+    <UserAddTeamItem @getTeamData="getTeamData" />
     <UserModifyTeam ref="userModifyTeam" />
   </div>
 </template>
@@ -205,13 +206,15 @@ export default {
       });
     },
     /**
-     * 想子组件传数据，打开侧面抽屉
+     * 向子组件传数据，打开侧面抽屉
      */
     setTargetModifyTeam(team) {
+      console.log(team);
       this.$refs.userModifyTeam.doModify(team);
     }
   },
   mounted() {
+    // 初始化时自动加载页面数据
     this.getTeamData();
   },
 };

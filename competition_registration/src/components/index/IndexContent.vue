@@ -62,9 +62,9 @@ export default {
 </script>
 
 <style>
-#competitions {
+/* #competitions {
   float: left;
-}
+} */
 
 #competitions ul li {
   list-style-type: none;

@@ -46,12 +46,11 @@ public class WebLogAspect {
                 "; IP : " + request.getRemoteAddr() +
                 "; 类与方法 : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName() +
                 "; 参数 : " + Arrays.toString(joinPoint.getArgs());
-        log.debug(msg);
+        log.info(msg);
     }
 
     @AfterReturning(returning = "ret", pointcut = "webLog()")
     public void afterControll(Object ret) {
         // 处理完请求，返回内容
-        log.debug("处理完请求，返回内容 : " + ret);
     }
 }

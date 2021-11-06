@@ -95,9 +95,9 @@ export default {
     return {
       loginForm: {
         // 默认值
-        username: "123123",
+        username: "Protea",
         password: "123123",
-        captcha: "",
+        captcha: "1234",
       },
       rules: {
         username: [{ validator: validateUsername, trigger: "input" }],
@@ -138,15 +138,25 @@ export default {
           password: "secret",
         },
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       })
         .then((response) => {
           console.log(response);
           this.$store.commit("setTokenDetails", response);
           this.axiosLogin();
         })
-        .catch(() => {});
+        .catch((error) => {
+          console.log(error);
+          let { message } = error;
+          let code = Number(message.substr(message.length - 3));
+          if (code == 400) {
+            this.$notify.error({
+              title: "登录失败",
+              message: "密码错误！",
+            });
+          }
+        });
     },
     axiosLogin() {
       // 表单格式提交数据：
@@ -165,8 +175,8 @@ export default {
         url: "/users/login",
         data,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       })
         .then((response) => {
           if (response.code === 200) {

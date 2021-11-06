@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.etherealss.mapper.NotificationElementMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="pers.etherealss.pojo.po.NotificationElement">
+        <id column="id" property="id"/>
+        <result column="notification_id" property="notificationId"/>
+        <result column="seq" property="seq"/>
+        <result column="target_id" property="targetId"/>
+        <result column="targetType" property="targetType"/>
+    </resultMap>
+    <select id="selectTargetId" resultType="java.lang.Long">
+        SELECT `target_id`
+        FROM `notification_element`
+        WHERE `notification_id` = #{notificationId}
+          AND `seq` = #{seq};
+    </select>
+    <select id="selectByNotificationId" resultType="pers.etherealss.pojo.po.NotificationElement">
+        SELECT `id`, `notification_id`, `seq`, `target_id`, `target_type`
+        FROM `notification_element`
+        WHERE `notification_id` = #{notificationId};
+    </select>
+
+</mapper>

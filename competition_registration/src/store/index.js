@@ -60,6 +60,9 @@ const getters = {
         }
         return state.tokenDetails.token_type + " " + state.tokenDetails.access_token;
     },
+    isOfficial: (state) => {
+        return state.userDetails != null && state.userDetails.userRole == "official";
+    },
 }
 
 //创建并暴露store

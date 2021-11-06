@@ -8,6 +8,8 @@
         <result column="team_id" property="teamId" />
         <result column="competition_id" property="competitionId" />
         <result column="create_time" property="createTime" />
+        <result column="has_cancelled" property="hasCancelled" />
+
     </resultMap>
 
 </mapper>

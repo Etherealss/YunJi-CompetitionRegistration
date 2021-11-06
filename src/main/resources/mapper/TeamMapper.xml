@@ -10,10 +10,27 @@
         <result column="invite_code" property="inviteCode"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
+    <insert id="insertNewMember">
+        INSERT INTO `team_member` (team_id, student_id)
+        VALUES (#{teamId}, #{memberId});
+    </insert>
     <select id="selectTeamMembersId" resultType="int">
         SELECT `student_id`
         FROM `team_member`
         WHERE `team_id` = #{teamId};
+    </select>
+    <select id="selectTeamsByMemberId" resultType="pers.etherealss.pojo.po.Team">
+        SELECT `id`, `name`, `leader_id`, `invite_code`, `create_time`
+        FROM `team`
+                 INNER JOIN `team_member`
+                            ON `team`.`id` = `team_member`.`team_id`
+        WHERE `team_member`.`student_id` = #{userId};
+    </select>
+    <select id="selectExistMemberInTeam" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM `team_member`
+        WHERE `team_id` = #{teamId}
+          AND `student_id` = #{userId};
     </select>
 
 </mapper>

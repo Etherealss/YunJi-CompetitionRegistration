@@ -12,5 +12,10 @@
         <result column="introduction" property="introduction" />
         <result column="contact" property="contact" />
     </resultMap>
+    <select id="selectOfficialProfileById" resultType="pers.etherealss.pojo.po.Official">
+        SELECT `id`, `name`, `sex`, `contact`
+        FROM `official`
+        WHERE `id` = #{officialId};
+    </select>
 
 </mapper>

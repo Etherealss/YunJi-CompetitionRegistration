@@ -29,7 +29,7 @@ Vue.prototype.dayjs = dayjs;
 // 调用路由
 Vue.prototype.$doRoute = function (path) {
     router.push(path);
-} 
+}
 
 new Vue({
     el: '#app',

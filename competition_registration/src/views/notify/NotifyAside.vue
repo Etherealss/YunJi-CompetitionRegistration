@@ -3,7 +3,8 @@
     <ul>
       <li>评论</li>
       <li>点赞</li>
-      <li @click="doRoute('/notify/team')">组队信息</li>
+      <li v-show="!isOfficial()" @click="doRoute('/notify/team')">组队信息</li>
+      <li @click="doRoute('/notify/competition')">赛事信息</li>
       <li @click="doRoute('/notify/system')">系统通知</li>
     </ul>
   </div>
@@ -14,7 +15,10 @@ export default {
   methods: {
     doRoute(path) {
       this.$doRoute(path);
-    }
+    },
+    isOfficial() {
+      return this.$store.getters.isOfficial;
+    },
   }
 };
 </script>

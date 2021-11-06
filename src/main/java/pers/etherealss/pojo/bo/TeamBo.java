@@ -44,6 +44,11 @@ public class TeamBo implements Serializable {
      */
     private List<User> members;
 
+    /**
+     * 邀请码
+     */
+    private String inviteCode;
+
     public static TeamBo init(Team team) {
         TeamBo teamBo = new TeamBo();
         BeanUtils.copyProperties(team, teamBo);
