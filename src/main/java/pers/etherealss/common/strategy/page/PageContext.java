@@ -3,6 +3,7 @@ package pers.etherealss.common.strategy.page;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import lombok.extern.slf4j.Slf4j;
+import pers.etherealss.common.enums.PublishState;
 import pers.etherealss.common.exception.ErrorParamException;
 import pers.etherealss.common.strategy.page.impl.DefaultQueryStragety;
 import pers.etherealss.pojo.bo.PageBo;
@@ -78,6 +79,8 @@ public class PageContext<T> {
         获取查询逻辑QueryWrapper，并查询页面数据
          */
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("update_time", "create_time");
+        queryWrapper.eq("state", PublishState.PUBLISHED);
         // 添加分页语句
         queryWrapper.last(" limit " + start + ", " + offset);
         queryStrategy.definePageData(queryWrapper, keywords);

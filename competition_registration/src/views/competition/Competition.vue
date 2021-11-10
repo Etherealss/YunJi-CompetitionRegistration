@@ -3,7 +3,7 @@
     <Header />
     <div id="compDetailsBody">
       <competiton-content id="competitonContent" />
-      <competition-aside id="competitonAside" />
+      <competition-aside id="competitonAside" v-show="canShowRegister()" />
     </div>
     <register-competition ref="registerCompetition" />
   </div>
@@ -24,6 +24,10 @@ export default {
   methods: {
     toRegister() {
       this.$refs.registerCompetition.doRegister();
+    },
+    canShowRegister() {
+      let userRole = this.$store.getters.getUserDetails.userRole;
+      return userRole == null || userRole == "student";
     },
   },
 };

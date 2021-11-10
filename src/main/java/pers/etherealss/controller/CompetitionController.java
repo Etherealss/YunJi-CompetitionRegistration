@@ -3,15 +3,21 @@ package pers.etherealss.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import pers.etherealss.common.enums.PageOrderBy;
+import pers.etherealss.common.enums.PublishState;
 import pers.etherealss.common.exception.ErrorParamException;
 import pers.etherealss.common.exception.MissingParamException;
-import pers.etherealss.common.exception.NotFoundException;
 import pers.etherealss.pojo.bo.PageBo;
 import pers.etherealss.pojo.po.Competition;
+import pers.etherealss.pojo.po.User;
 import pers.etherealss.pojo.vo.Msg;
 import pers.etherealss.service.CompetitionService;
+import pers.etherealss.utils.TokenUtil;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 赛事
@@ -29,7 +35,7 @@ public class CompetitionController {
     private static final int PAGE_SIZE = 8;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionService compService;
 
     /*
        1.  使用;连接矩阵变量。请求路径写成：/cars/sell;low=34;brand=byd,audi,yd
@@ -57,9 +63,9 @@ public class CompetitionController {
         log.debug("获取分页数据：当前页curPage = {}, orderBy = {}", curPage, orderBy);
         PageBo<Competition> page = null;
         if (orderBy == null) {
-            page = competitionService.getPage(curPage, PAGE_SIZE);
+            page = compService.getPage(curPage, PAGE_SIZE);
         } else if (PageOrderBy.TIME.equals(orderBy)) {
-            page = competitionService.getPageByTime(curPage, PAGE_SIZE);
+            page = compService.getPageByTime(curPage, PAGE_SIZE);
         } else {
             throw new ErrorParamException("不支持的orderBy格式");
         }
@@ -67,16 +73,42 @@ public class CompetitionController {
     }
 
     @GetMapping("/public/{id}")
-    public Msg<Competition> getCompetition(@PathVariable String id) {
+    public Msg<Competition> getCompetition(@PathVariable Integer id) {
         log.debug("获取比赛信息：{}", id);
         if (id == null) {
             throw new MissingParamException("获取比赛信息参数缺失");
         }
-        Competition competition = competitionService.getById(id);
-        if (competition == null) {
-            throw new NotFoundException("没有比赛：" + id + " 的数据");
+        return compService.getOne4State(id, PublishState.PUBLISHED);
+    }
+
+    /**
+     * 审核未发布的比赛时，获取待审核的比赛信息
+     * @param id
+     * @return
+     */
+    @Secured("ROLE_admin")
+    @GetMapping("/review/{id}")
+    public Msg<Competition> getCompetition4Review(@PathVariable Integer id) {
+        log.debug("获取待审核的比赛信息：{}", id);
+        if (id == null) {
+            throw new MissingParamException("获取待审核的比赛信息参数缺失");
         }
-        return Msg.ok(competition);
+        return compService.getOne4State(id, PublishState.REVIEWING);
+    }
+
+    @PostMapping("/create")
+    public Msg<Competition> addCompetition(HttpServletRequest req,  @RequestBody Competition competition) {
+        User user = TokenUtil.getUserByToken(req);
+        log.debug("发布新比赛：{}", competition);
+        compService.create(user, competition);
+        return Msg.ok();
+    }
+
+    @Secured("ROLE_admin")
+    @GetMapping("/review")
+    public Msg<List<Competition>> get4Review() {
+        Msg<List<Competition>> review = compService.getPage4Review();
+        return review;
     }
 
 }

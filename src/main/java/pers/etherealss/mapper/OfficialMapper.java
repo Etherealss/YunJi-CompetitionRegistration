@@ -22,5 +22,4 @@ public interface OfficialMapper extends BaseMapper<Official> {
      * @return
      */
     Official selectOfficialProfileById(@Param("officialId") Integer officialId);
-
 }

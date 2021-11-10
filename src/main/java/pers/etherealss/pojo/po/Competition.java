@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import pers.etherealss.common.enums.PublishState;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -92,9 +93,29 @@ public class Competition implements Serializable {
     /**
      * 是否为草稿
      */
-    private Boolean isDraft;
+    private Integer state;
 
-    public Boolean getIsDraft() {
-        return isDraft;
+    /**
+     * 是否为草稿
+     * @return
+     */
+    public boolean isDraft() {
+        return state == PublishState.DRAFT;
+    }
+
+    /**
+     * 是否正在审核
+     * @return
+     */
+    public boolean isReviewing() {
+        return state == PublishState.DRAFT;
+    }
+
+    /**
+     * 是否正在审核
+     * @return
+     */
+    public boolean isPublished() {
+        return state == PublishState.PUBLISHED;
     }
 }

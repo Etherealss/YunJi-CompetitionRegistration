@@ -47,5 +47,16 @@ public class NotificationController {
         return Msg.ok(notificationService.getCompetitionNotifications(user.getId()));
     }
 
+    /**
+     * 获取系统通知信息
+     * @param request
+     * @return
+     */
+    @GetMapping("/systems")
+    public Msg<List<NotificationBo>> getSystemNotifications(HttpServletRequest request) {
+        User user = TokenUtil.getUserByToken(request);
+        return Msg.ok(notificationService.getSystemNotifications(user.getId()));
+    }
+
 }
 

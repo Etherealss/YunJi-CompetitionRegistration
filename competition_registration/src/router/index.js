@@ -18,6 +18,12 @@ import NotifyTeam from '@/views/notify/NotifyTeam'
 import NotifySystem from '@/views/notify/NotifySystem'
 import NotifyCompetition from '@/views/notify/NotifyCompetition'
 import Competition from '@/views/competition/Competition'
+import CreateCompetition from '@/views/competition/CreateCompetition'
+import AdminCenter from '@/views/admin/AdminCenter'
+import ReviewCompetition from '@/views/admin/ReviewCompetition'
+import ReviewOrganization from '@/views/admin/ReviewOrganization'
+import ManagementPermission from '@/views/admin/ManagementPermission'
+import ManagementCompetition from '@/views/admin/ManagementCompetition'
 
 // https://blog.csdn.net/qq_29252021/article/details/109615753
 // 缓存原型上的push函数
@@ -63,8 +69,7 @@ const router = new VueRouter({
 			name: 'register',
 			component: Register
 		},
-		{
-			// 嵌套路由：官网 https://router.vuejs.org/zh/guide/essentials/nested-routes.html
+		{// 嵌套路由：官网 https://router.vuejs.org/zh/guide/essentials/nested-routes.html
 			path: '/users',
 			component: UserCenter,
 			children: [
@@ -108,6 +113,32 @@ const router = new VueRouter({
 			path: '/competitions/:id',
 			component: Competition,
 		},
+		{
+			path: '/create/competitions',
+			component: CreateCompetition,
+		},
+		{
+			path: '/admins',
+			component: AdminCenter,
+			children: [
+				{
+					path: "review/competitions",
+					component: ReviewCompetition,
+				},
+				{
+					path: "review/organizations",
+					component: ReviewOrganization,
+				},
+				{
+					path: "manage/permissions",
+					component: ManagementPermission,
+				},
+				{
+					path: "manage/competitions",
+					component: ManagementCompetition,
+				},
+			]
+		},
 	]
 })
 
@@ -115,7 +146,12 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
 	// 路由前 登录检查
 	routerLoginInterceptor.routerLoginInterceptor(router, to, from, next, myStore);
-})
+});
+
+router.afterEach(() => {
+	// 在页面跳转后回到页面顶部
+	window.scrollTo(0, 0)
+});
 
 //暴露router
 export default router

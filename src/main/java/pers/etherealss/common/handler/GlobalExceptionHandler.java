@@ -2,6 +2,7 @@ package pers.etherealss.common.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -118,6 +119,16 @@ public class GlobalExceptionHandler {
     public Msg<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         log.warn("[全局异常处理器]方法不存在："+e.getMessage());
         return new Msg<>(ApiInfo.REQUEST_UNSUPPORTED);
+    }
+
+    /**
+     * 参数缺失
+     */
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public Msg<Object> handleAccessDeniedException(AccessDeniedException e) {
+        log.info("[无权访问]" + e.getMessage());
+        return new Msg<>(ApiInfo.FORBIDDEN_REQUEST);
     }
 
     /**

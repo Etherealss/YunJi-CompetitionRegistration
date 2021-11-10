@@ -8,5 +8,6 @@ public class NotifyType {
     public static final String REQUEST_ADD_TEAM = "RequestAddTeam";
     public static final String REGISTER_COMPETITION = "RegisterCompetition";
     public static final String NEW_REGISTER_COMPETITION = "NewRegisterCompetition";
+    public static final String REVIEW_COMPETITION = "ReviewCompetition";
 
 }

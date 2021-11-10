@@ -1,44 +1,64 @@
 <template>
   <div>
-    <div class="notifySystemTitle">
-      {{ systemMessage.title }}
-    </div>
+    <div class="notifySystemTitle">系统信息</div>
+    <el-empty
+      description="暂无系统消息"
+      v-show="systemMessages.length == 0"
+    ></el-empty>
     <div
       class="notifySystemBody"
-      v-for="(item, index) in systemMessage.items"
+      v-for="(item, index) in systemMessages"
       :key="index"
     >
-      <div v-if="item.sender != undifined">
+      <div v-if="item.sender != 'undifined'">
         <div class="notifySystemUserAvatar">
-          <el-avatar size="medium" :src="item.sender.avatar"></el-avatar>
+          <el-avatar
+            size="medium"
+            :src="'/api/users/public/avatar' + item.sender.avatar"
+          ></el-avatar>
         </div>
       </div>
       <div v-else></div>
-      <div v-if="item.sender != undifined" class="notifySystemDetails">
+      <div v-if="item.sender != 'undifined'" class="notifySystemDetails">
         <!-- 带发送者的系统消息 -->
-        <!-- 发送信息 -->
         <!-- 发送者用户名 -->
         <div class="notifySystemUsername">{{ item.sender.username }}</div>
         <!-- 时间 -->
         <div class="notifySystemTime">
-          {{ dayjs(item.time).format("YYYY-MM-DD HH:mm:ss") }}
+          {{ dayjs(item.createTime).format("YYYY-MM-DD HH:mm:ss") }}
         </div>
+        <!-- 信息 -->
         <div class="notifySystemMessage">
-          {{ item.message }}
+          <!-- 拼接字符串 -->
+          {{ item.message.substring(0, item.message.indexOf("{}")) }}
+          <span
+            class="notifyElement"
+            @click="doRoute('/competitions/' + item.elements[0].target.id)"
+          >
+            {{ item.elements[0].target.name }}
+          </span>
+          {{ item.message.substring(item.message.indexOf("{}") + 2) }}
         </div>
+        <!-- <div 
+          class="notifySystemMessage"
+          v-html="getNotifyMessage(item.message, item.elements, item.type)"
+        >
+        <span class='notifyElement' @click="doRoute('/competitions/${elements[0].target.id}')">
+          ${elements[0].target.name} 
+          </span></div> -->
       </div>
       <div v-else class="notifySystemDetails">
         <!-- 无发送者的系统消息 -->
-        <!-- 发送信息 -->
         <!-- 发送者用户名 -->
         <div class="notifySystemSystemTitle"><span>系统通知</span></div>
         <!-- 时间 -->
         <div class="notifySystemTime">
-          {{ dayjs(item.time).format("YYYY-MM-DD HH:mm:ss") }}
+          {{ dayjs(item.createTime).format("YYYY-MM-DD HH:mm:ss") }}
         </div>
-        <div class="notifySystemMessage">
-          {{ item.message }}
-        </div>
+        <div
+          class="notifySystemMessage"
+          v-html="getNotifyMessage(item.message, item.elements, item.type)"
+        ></div>
       </div>
       <!-- 按钮 -->
       <div class="notifySystemActions">
@@ -49,32 +69,37 @@
 </template>
 
 <script>
+import StringUtil from "@/utils/StringUtil.js";
 export default {
   data() {
     return {
-      systemMessage: {
-        title: "系统信息",
-        items: [
-          {
-            title: "报名成功",
-            message: "你的队伍 你说的都对 报名比赛 软件设计大赛 成功！",
-            type: "EnrollmentSuccessful",
-            createTime: new Date(),
-            sender: {
-              id: "12312",
-              username: "Pythoncb",
-              avatar: "",
-            },
-          },
-          {
-            title: "报名成功",
-            message: "你的队伍 你说的都对2 报名比赛 软件设计大赛2 成功！",
-            type: "EnrollmentSuccessful",
-            createTime: new Date(),
-          },
-        ],
-      },
+      systemMessages: [],
     };
+  },
+  methods: {
+    getNotifyMessage(message, elements, type) {
+      if (elements.length == 0) {
+        return message;
+      }
+      if (type == "ReviewCompetition") {
+        let s1 = `<span class='notifyElement' @click="doRoute('/competitions/${elements[0].target.id}')">
+          ${elements[0].target.name} 
+          </span>`;
+        message = StringUtil.format(message, s1);
+      }
+      console.log(message);
+      return message;
+    },
+    doRoute(path) {
+      this.$doRoute(path);
+    },
+  },
+  beforeMount() {
+    this.$axios.get("/notifications/systems").then((r) => {
+      if (r.code == 200) {
+        this.systemMessages = r.data;
+      }
+    });
   },
 };
 </script>

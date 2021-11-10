@@ -6,8 +6,8 @@
 <Configuration status="warn" monitorInterval="5">
     <!-- 集中配置属性进行管理。使用:${name} -->
     <properties>
-        <property name="fileLevel">debug</property>
-        <property name="rootLevel">debug</property>
+        <property name="fileLevel">trace</property>
+        <property name="rootLevel">trace</property>
         <property name="LOG_HOME">/www/CR/webapp-logs</property>
         <!--控制台输出格式-->
         <!--%d{HH:mm:ss.SSS} [%t] [%-5level] %c{36}:%L - %m%n-->
@@ -108,10 +108,7 @@
         <logger name="org.jboss.netty" level="warn"/>
         <logger name="org.apache" level="warn"/>
         <logger name="org.apache.http" level="warn"/>
-        <logger name="org.apache.ibatis" level="warn"/>
-        <logger name="org.mybatis" level="warn"/>
         <logger name="org.elasticsearch" level="warn"/>
-        <logger name="org.apache.ibatis.logging.jdbc.BaseJdbcLogger" level="warn" />
         <logger name="druid.sql" level="warn"/>
         <logger name="org.thymeleaf" level="warn"/>
         <logger name="springfox.documentation" level="warn"/>

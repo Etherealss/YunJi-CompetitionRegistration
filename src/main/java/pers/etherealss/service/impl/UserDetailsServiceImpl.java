@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import pers.etherealss.common.enums.UserRole;
 import pers.etherealss.mapper.OfficialMapper;
 import pers.etherealss.mapper.StudentMapper;
 import pers.etherealss.mapper.UserMapper;
@@ -52,11 +53,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         user.setAuthorities(grantedAuthorities);
 
         switch (user.getUserRole()) {
-            case "student":
+            case UserRole.STUDENT:
                 user.setUserInfo(studentMapper.selectById(user.getId()));
+                grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_student"));
+                break;
+            case UserRole.OFFICICAL:
+                user.setUserInfo(officialMapper.selectById(user.getId()));
+                grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_official"));
+                break;
+            case UserRole.ADMIN:
+                grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_admin"));
                 break;
             default:
-                user.setUserInfo(officialMapper.selectById(user.getId()));
         }
 
         return user;

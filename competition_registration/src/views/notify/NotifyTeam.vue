@@ -1,6 +1,10 @@
 <template>
   <div>
     <div class="notifyTeamTitle">组队信息</div>
+    <el-empty
+      description="暂无组队信息"
+      v-show="notifications.length == 0"
+    ></el-empty>
     <div
       class="notifyTeamBody"
       v-for="(item, index) in notifications"

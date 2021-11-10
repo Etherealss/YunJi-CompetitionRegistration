@@ -47,6 +47,12 @@ public enum ApiInfo {
     TEAM_HAS_JIONED(10501, "[用户已经在队伍中]"),
 
     TEAM_HAS_REGISTER(10601, "[队伍已报名]"),
+
+    HAS_PUBLISHED(10701, "[已发布]"),
+    /** 审核中 */
+    IS_REVIEWING(10702, "[正在审核]"),
+    /** 草稿 */
+    IS_DRAFT(10703, "[未发布]"),
     ;
 
     int code;

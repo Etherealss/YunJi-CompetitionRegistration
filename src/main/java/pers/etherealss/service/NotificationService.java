@@ -42,6 +42,13 @@ public interface NotificationService extends IService<Notification> {
     List<NotificationBo> getCompetitionNotifications(Integer userId);
 
     /**
+     * 获取系统通知消息
+     * @param userId
+     * @return
+     */
+    List<NotificationBo> getSystemNotifications(Integer userId);
+
+    /**
      * 通知队员 已报名比赛
      * @param leaderId
      * @param teamId

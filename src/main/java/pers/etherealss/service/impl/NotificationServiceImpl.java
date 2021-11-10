@@ -54,6 +54,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         notification.setMessage(message);
         notification.setTitle(NotifyTitle.REQUEST_ADD_TEAM);
         notification.setType(NotifyType.REQUEST_ADD_TEAM);
+        notification.setDisplayPosition(NotifyPosition.TEAM);
         notiMapper.insert(notification);
 
         elementSaver.save(notification,
@@ -82,6 +83,16 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         QueryWrapper<Notification> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("receiver_id", userId)
                 .eq("display_position", NotifyPosition.COMPETITION)
+                .orderByDesc("create_time");
+        List<Notification> notifications = notiMapper.selectList(queryWrapper);
+        return wrapNotifications(notifications);
+    }
+
+    @Override
+    public List<NotificationBo> getSystemNotifications(Integer userId) {
+        QueryWrapper<Notification> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("receiver_id", userId)
+                .eq("display_position", NotifyPosition.SYSTEM)
                 .orderByDesc("create_time");
         List<Notification> notifications = notiMapper.selectList(queryWrapper);
         return wrapNotifications(notifications);
@@ -125,12 +136,11 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             for (Integer memberId : membersId) {
                 noti.setReceiverId(memberId);
                 notiMapper.insert(noti);
+                elementSaver.save(noti,
+                        NotificationElementType.TEAM.getKey(), teamId,
+                        NotificationElementType.COMPETITION.getKey(), competitionId
+                );
             }
-
-            elementSaver.save(noti,
-                    NotificationElementType.TEAM.getKey(), teamId,
-                    NotificationElementType.COMPETITION.getKey(), competitionId
-            );
         }
     }
 

@@ -45,6 +45,9 @@ public class UserManage {
      * @return
      */
     public User getUserProfile(Integer userId, boolean saveCache) {
+        if (userId == null) {
+            return null;
+        }
         // 测试见RedisTest
         User user = (User) redisTemplate.opsForHash().get(RedisKey.USER_KEY, userId);
         if (user == null) {
@@ -55,7 +58,7 @@ public class UserManage {
             user.setPassword(null);
             if (UserRole.STUDENT.equals(user.getUserRole())) {
                 user.setUserInfo(studentMapper.selectStudentProfileById(userId));
-            } else if(UserRole.OFFICICAL.equals(user.getUserRole())) {
+            } else if (UserRole.OFFICICAL.equals(user.getUserRole())) {
                 user.setUserInfo(officialMapper.selectOfficialProfileById(userId));
             }
             if (saveCache) {

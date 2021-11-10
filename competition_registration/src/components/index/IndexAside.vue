@@ -1,9 +1,40 @@
 <template>
   <div>
-    <div v-show="isOfficial()">
+    <div v-if="userRole == 'student'">
       <div id="indexAsideBox">
         <ul>
-          <li @click="doRoute('/competition/create')">
+          <li @click="doRoute('/users/entered')">
+            <div>
+              <img src="@/assets/icon/my_competitions.png" />
+            </div>
+            <span>我的比赛</span>
+          </li>
+          <li>
+            <div>
+              <img src="@/assets/icon/my_draft.png" />
+            </div>
+            <span>草稿箱</span>
+          </li>
+          <li @click="doRoute('/users/watched')">
+            <div>
+              <img src="@/assets/icon/my_attention.png" />
+            </div>
+            <span>我的关注</span>
+          </li>
+          <li @click="doRoute('/users/teams')">
+            <div>
+              <img src="@/assets/icon/my_group.png" />
+            </div>
+            <span>我的队伍</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- 官方人员 -->
+    <div v-else-if="userRole == 'official'">
+      <div id="indexAsideBox">
+        <ul>
+          <li @click="doRoute('/create/competitions')">
             <div>
               <img src="@/assets/icon/publish.png" />
             </div>
@@ -21,7 +52,7 @@
             </div>
             <span>我的发布</span>
           </li>
-          <li @click="doRoute('/notify/competitions')">
+          <li @click="doRoute('/notify/competition')">
             <div>
               <img src="@/assets/icon/competition_message.png" />
             </div>
@@ -30,7 +61,39 @@
         </ul>
       </div>
     </div>
-    <div v-show="!isOfficial()">
+    <!-- 管理员 -->
+    <div v-else-if="userRole == 'admin'">
+      <div id="indexAsideBox">
+        <ul>
+          <li @click="doRoute('/admins/review/competitions')">
+            <div>
+              <img src="@/assets/icon/review_competition.png" />
+            </div>
+            <span>审核比赛</span>
+          </li>
+          <li @click="doRoute('/admins/review/organizations')">
+            <div>
+              <img src="@/assets/icon/review_organization.png" />
+            </div>
+            <span>审核组织</span>
+          </li>
+          <li @click="doRoute('/admins/manage/permissions')">
+            <div>
+              <img src="@/assets/icon/management_permission.png" />
+            </div>
+            <span>权限管理</span>
+          </li>
+          <li @click="doRoute('/admins/manage/competitions')">
+            <div>
+              <img src="@/assets/icon/management_competition.png" />
+            </div>
+            <span>赛事管理</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- 普通用户或者游客 -->
+    <div v-else>
       <div id="indexAsideBox">
         <ul>
           <li @click="doRoute('/users/entered')">
@@ -65,13 +128,19 @@
 
 <script>
 export default {
+  data() {
+    return {
+      userRole: "",
+    };
+  },
   methods: {
     doRoute(path) {
       this.$doRoute(path);
     },
-    isOfficial() {
-      return this.$store.getters.isOfficial;
-    },
+  },
+  beforeMount() {
+    let user = this.$store.getters.getUserDetails;
+    this.userRole = user == undefined ? "" : user.userRole;
   },
 };
 </script>

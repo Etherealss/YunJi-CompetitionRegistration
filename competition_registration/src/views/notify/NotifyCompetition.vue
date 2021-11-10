@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="notifyCompetitionTitle">赛事信息</div>
+    <el-empty description="暂无赛事信息" v-show="notifications.length == 0"></el-empty>
     <div
       class="notifyCompetitionBody"
       v-for="(item, index) in notifications"

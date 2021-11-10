@@ -68,6 +68,8 @@ service.interceptors.response.use(
             console.log(message);
             if (code == 400) {
                 return Promise.reject(error);
+            } else if (code ==403) {
+                message = "没有访问权限！"
             }
         }
         notify({

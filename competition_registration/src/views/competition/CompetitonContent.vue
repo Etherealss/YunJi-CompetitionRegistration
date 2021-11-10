@@ -19,7 +19,7 @@
     </el-card>
     <!-- 举办方organization，负责人 manager，联系方式consulting_phone -->
     <el-card class="compDetailsBox" id="compProcess" shadow="never">
-      <el-descriptions title="举办方信息">
+      <el-descriptions title="其他信息">
         <el-descriptions-item label="举办方" labelClassName="compDescLable">{{
           comp.organizationName
         }}</el-descriptions-item>
@@ -64,9 +64,14 @@ export default {
     },
   },
   beforeMount() {
+    let url =
+      this.$route.query.state == 1
+        ? "/competitions/review/" + this.$route.params.id
+        : "/competitions/public/" + this.$route.params.id;
+    console.log(url);
     this.$axios({
       method: "get",
-      url: "/competitions/public/" + this.$route.params.id,
+      url,
     }).then((r) => {
       if (r.code == 200) {
         this.comp = r.data;
