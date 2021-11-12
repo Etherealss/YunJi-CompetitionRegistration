@@ -26,6 +26,6 @@
     <select id="selectUserPermissions" resultType="java.lang.String">
         select `permission`
         from `permission`
-        where username = #{username};
+        where id = #{id};
     </select>
 </mapper>

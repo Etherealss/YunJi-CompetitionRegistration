@@ -53,6 +53,9 @@ public enum ApiInfo {
     IS_REVIEWING(10702, "[正在审核]"),
     /** 草稿 */
     IS_DRAFT(10703, "[未发布]"),
+
+    ORGANIZATION_HAS_JIONED(10801, "[用户已经在组织中]"),
+
     ;
 
     int code;

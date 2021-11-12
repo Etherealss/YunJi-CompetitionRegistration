@@ -63,6 +63,12 @@ const getters = {
     isOfficial: (state) => {
         return state.userDetails != null && state.userDetails.userRole == "official";
     },
+    isStudent: (state) => {
+        return state.userDetails != null && state.userDetails.userRole == "student";
+    },
+    isAdmin: (state) => {
+        return state.userDetails != null && state.userDetails.userRole == "admin";
+    },
 }
 
 //创建并暴露store

@@ -1,6 +1,7 @@
 package pers.etherealss.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import pers.etherealss.pojo.po.Organization;
 
@@ -20,4 +21,7 @@ public interface OrganizationMapper extends BaseMapper<Organization> {
      */
     List<Organization> selectByOfficialId(Integer officialId);
 
+    Long selectExistMemberInOrg(@Param("userId") Integer userId, @Param("orgId") Integer orgId);
+
+    void insertNewMember(@Param("orgId") Integer orgId, @Param("memberId") Integer memberId);
 }

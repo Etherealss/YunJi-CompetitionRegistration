@@ -13,8 +13,7 @@ public interface PageQueryStrategy<T> {
      * 定义查询逻辑
      *
      * @param queryWrapper
-     * @param keywords
      * @return
      */
-    void definePageData(QueryWrapper<T> queryWrapper, String... keywords);
+    void definePageData(QueryWrapper<T> queryWrapper);
 }

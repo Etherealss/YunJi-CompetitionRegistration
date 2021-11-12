@@ -44,6 +44,8 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
     private UserManage userManage;
     @Autowired
     private CompetitionMapper compMapper;
+    @Autowired
+    private OrganizationMapper orgMapper;
 
     @Override
     public void notifyAddTeanm2Leader(User sender, Team team) {
@@ -52,8 +54,8 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         notification.setSenderId(sender.getId());
         notification.setReceiverId(team.getLeaderId());
         notification.setMessage(message);
-        notification.setTitle(NotifyTitle.REQUEST_ADD_TEAM);
-        notification.setType(NotifyType.REQUEST_ADD_TEAM);
+        notification.setTitle(NotifyType.REQUEST_ADD_TEAM.getTitle());
+        notification.setType(NotifyType.REQUEST_ADD_TEAM.getType());
         notification.setDisplayPosition(NotifyPosition.TEAM);
         notiMapper.insert(notification);
 
@@ -69,30 +71,10 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
     }
 
     @Override
-    public List<NotificationBo> getTeamNotifications(Integer userId) {
+    public List<NotificationBo> getNotifications(Integer userId, String dispalyPosition) {
         QueryWrapper<Notification> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("receiver_id", userId)
-                .eq("display_position", NotifyPosition.TEAM)
-                .orderByDesc("create_time");
-        List<Notification> notifications = notiMapper.selectList(queryWrapper);
-        return wrapNotifications(notifications);
-    }
-
-    @Override
-    public List<NotificationBo> getCompetitionNotifications(Integer userId) {
-        QueryWrapper<Notification> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("receiver_id", userId)
-                .eq("display_position", NotifyPosition.COMPETITION)
-                .orderByDesc("create_time");
-        List<Notification> notifications = notiMapper.selectList(queryWrapper);
-        return wrapNotifications(notifications);
-    }
-
-    @Override
-    public List<NotificationBo> getSystemNotifications(Integer userId) {
-        QueryWrapper<Notification> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("receiver_id", userId)
-                .eq("display_position", NotifyPosition.SYSTEM)
+                .eq("display_position", dispalyPosition)
                 .orderByDesc("create_time");
         List<Notification> notifications = notiMapper.selectList(queryWrapper);
         return wrapNotifications(notifications);
@@ -129,8 +111,8 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             Notification noti = new Notification();
             noti.setMessage(message);
             noti.setSenderId(leaderId);
-            noti.setTitle(NotifyTitle.REGISTER_COMPETITION);
-            noti.setType(NotifyType.REGISTER_COMPETITION);
+            noti.setTitle(NotifyType.REGISTER_COMPETITION.getTitle());
+            noti.setType(NotifyType.REGISTER_COMPETITION.getType());
             noti.setDisplayPosition(NotifyPosition.COMPETITION);
             // 通知每一个队员
             for (Integer memberId : membersId) {
@@ -151,13 +133,10 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
      */
     private void notifyTeamRegister2Manager(Team team, Competition competition) {
         String message = "队伍 {} 已报名比赛：{}";
-        Notification noti = new Notification();
-        noti.setMessage(message);
+        Notification noti = new Notification(NotifyType.NEW_REGISTER_COMPETITION);
         noti.setSenderId(team.getLeaderId());
-        noti.setTitle(NotifyTitle.NEW_REGISTER_COMPETITION);
-        noti.setType(NotifyType.NEW_REGISTER_COMPETITION);
-        noti.setDisplayPosition(NotifyPosition.COMPETITION);
         noti.setReceiverId(competition.getCreatorId());
+        noti.setMessage(message);
         notiMapper.insert(noti);
         elementSaver.save(noti,
                 NotificationElementType.TEAM.getKey(), team.getId(),
@@ -213,20 +192,25 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
      */
     private NotificationElementBo<?> initNe(NotificationElement element) {
         NotificationElementBo<?> res = null;
-        if (NotifyTargetType.USER.equals(element.getTargetType())) {
+        if (NotificationElementType.USER.getKey().equals(element.getTargetType())) {
             NotificationElementBo<User> bo = new NotificationElementBo<>();
             bo.setTarget(userManage.getUserProfile(Math.toIntExact(element.getTargetId())));
             res = bo;
-        } else if (NotifyTargetType.TEAM.equals(element.getTargetType())) {
+        } else if (NotificationElementType.TEAM.getKey().equals(element.getTargetType())) {
             NotificationElementBo<Team> bo = new NotificationElementBo<>();
             bo.setTarget(teamMapper.selectById(element.getTargetId()));
             res = bo;
-        } else if (NotifyTargetType.COMPETITION.equals(element.getTargetType())) {
+        } else if (NotificationElementType.COMPETITION.getKey().equals(element.getTargetType())) {
             NotificationElementBo<Competition> bo = new NotificationElementBo<>();
             bo.setTarget(compMapper.selectById(element.getTargetId()));
             res = bo;
+        } else if (NotificationElementType.ORGANIZATION.getKey().equals(element.getTargetType())) {
+            NotificationElementBo<Organization> bo = new NotificationElementBo<>();
+            bo.setTarget(orgMapper.selectById(element.getTargetId()));
+            res = bo;
         } else {
-            throw new UnsupportedOperationException("未知的NotificationElement#targetType");
+            log.warn("未知的NotificationElement#targetType:" + element.getTargetType());
+            throw new UnsupportedOperationException("未知的NotificationElement#targetType:" + element.getTargetType());
         }
         BeanUtils.copyProperties(element, res);
         return res;

@@ -217,22 +217,22 @@ export default {
       let code = data.code;
       if (code >= 10300) {
         if (code == 10301) {
-          this.notifySuccess("未输入验证码！");
+          this.notifySuccessResp("未输入验证码！");
         } else if (code == 10302) {
-          this.notifySuccess("验证码不正确！");
+          this.notifySuccessResp("验证码不正确！");
         } else if (code == 10303) {
-          this.notifySuccess("验证码已失效！请刷新");
+          this.notifySuccessResp("验证码已失效！请刷新");
         } else {
-          this.notifySuccess("验证码异常！请稍后重试！");
+          this.notifySuccessResp("验证码异常！请稍后重试！");
         }
       }
       if (code >= 10200) {
         if (code == 10201) {
-          this.notifySuccess("您输入的密码不正确！");
+          this.notifySuccessResp("您输入的密码不正确！");
         } else if (code == 10202) {
-          this.notifySuccess("您输入用户不存在！");
+          this.notifySuccessResp("您输入用户不存在！");
         } else if (code == 10202) {
-          this.notifySuccess("该账号已登录，请勿重复登录！");
+          this.notifySuccessResp("该账号已登录，请勿重复登录！");
         }
       }
     },
@@ -244,7 +244,7 @@ export default {
         duration: 2000,
       });
     },
-    notifySuccess(message) {
+    notifySuccessResp(message) {
       this.$notify({
         title: "登录失败",
         message,

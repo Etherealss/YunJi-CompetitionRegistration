@@ -36,6 +36,10 @@ public class AdminReviewServiceImpl implements AdminReviewService {
         if (action) {
             comp.setState(PublishState.PUBLISHED);
             compMapper.updateById(comp);
+        } else {
+            // 审核不通过，变成草稿状态
+            comp.setState(PublishState.DRAFT);
+            compMapper.updateById(comp);
         }
         String message =
                 action ? "你发布的赛事 {} 已通过审核，发布成功！" : "你发布赛事 {} 审核不通过，请重新修改！";
@@ -43,8 +47,8 @@ public class AdminReviewServiceImpl implements AdminReviewService {
         notification.setSenderId(admin.getId());
         notification.setReceiverId(comp.getCreatorId());
         notification.setMessage(message);
-        notification.setTitle(NotifyTitle.REVIEW_COMPETITION);
-        notification.setType(NotifyType.REVIEW_COMPETITION);
+        notification.setTitle(NotifyType.REVIEW_COMPETITION.getTitle());
+        notification.setType(NotifyType.REVIEW_COMPETITION.getType());
         notification.setDisplayPosition(NotifyPosition.SYSTEM);
         notiMapper.insert(notification);
 

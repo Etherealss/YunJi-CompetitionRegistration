@@ -7,16 +7,28 @@
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="profile" property="profile"/>
-        <result column="affiliated_schools" property="affiliatedSchools"/>
-        <result column="contact_person" property="contactPerson"/>
+        <result column="affiliated_school" property="affiliatedSchool"/>
+        <result column="manager_id" property="managerId"/>
+        <result column="manager_name" property="managerName"/>
         <result column="contact_number" property="contactNumber"/>
     </resultMap>
+    <insert id="insertNewMember">
+        INSERT INTO `officical_organization` (organization_id, official_id)
+        VALUES (#{orgId}, #{memberId});
+    </insert>
     <select id="selectByOfficialId" resultType="pers.etherealss.pojo.po.Organization">
-        SELECT `id`, `name`, `profile`, `affiliated_schools`, `contact_person`, `contact_number`
+        SELECT `id`, `name`, `profile`, `affiliated_school`,
+               `manager_id`, `manager_name`, `contact_number`, `creator_id`
         FROM `organization` AS o
                  LEFT JOIN `officical_organization` AS oo
                            ON o.id = oo.organization_id
         WHERE oo.official_id = #{officialId};
+    </select>
+    <select id="selectExistMemberInOrg" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM `officical_organization`
+        WHERE `organization_id` = #{orgId}
+          AND `official_id` = #{userId};
     </select>
 
 </mapper>

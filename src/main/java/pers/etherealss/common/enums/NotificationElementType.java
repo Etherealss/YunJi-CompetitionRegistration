@@ -3,6 +3,7 @@ package pers.etherealss.common.enums;
 import lombok.Getter;
 import pers.etherealss.common.exception.ServiceException;
 import pers.etherealss.pojo.po.Competition;
+import pers.etherealss.pojo.po.Organization;
 import pers.etherealss.pojo.po.Team;
 import pers.etherealss.pojo.po.User;
 
@@ -17,6 +18,7 @@ public enum NotificationElementType {
     USER("user", User.class),
     TEAM("team", Team.class),
     COMPETITION("competition", Competition.class),
+    ORGANIZATION("organization", Organization.class),
     ;
 
     /**

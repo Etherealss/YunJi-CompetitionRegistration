@@ -1,7 +1,7 @@
 import { Notification } from 'element-ui';
 
 async function routerLoginInterceptor(router, to, from, next, myVuex) {
-    if (to.path == "/login" || to.path == "/index") {
+    if (to.path == "/login" || to.path == "/index" || to.path == "/register") {
         next(true);
     } else {
         let userDetails = myVuex.getters.getUserDetails;

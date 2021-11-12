@@ -4,9 +4,12 @@
       mode="horizontal"
       :default-active="activeIndex"
       router
-      style="overflow-x:auto;"
+      style="overflow-x: auto"
     >
-      <NavMenu :navMenus="menuData" style="width:800px;overflow-x:auto;"></NavMenu>
+      <NavMenu
+        :navMenus="menuData"
+        style="width: 800px; overflow-x: auto"
+      ></NavMenu>
     </el-menu>
   </div>
 </template>
@@ -28,6 +31,7 @@ export default {
             name: "accountManage",
             icon: "el-icon-setting",
             alias: "帐号管理",
+            show: this.$store.getters.getUserDetails != null,
           },
           childs: [
             {
@@ -66,6 +70,7 @@ export default {
             name: "myCompetitions",
             icon: "el-icon-message",
             alias: "我的比赛",
+            show: this.$store.getters.isStudent,
           },
           //二级
           childs: [
@@ -97,6 +102,18 @@ export default {
             icon: "el-icon-user",
             alias: "我的队伍",
             value: "/users/teams",
+            show: this.$store.getters.isStudent,
+          },
+        },
+        // 我的组织
+        {
+          entity: {
+            id: 9,
+            name: "myOrganization",
+            icon: "el-icon-user",
+            alias: "我的组织",
+            value: "/users/organizations",
+            show: this.$store.getters.isOfficial,
           },
         },
       ],

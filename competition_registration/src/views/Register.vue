@@ -99,19 +99,19 @@ export default {
     };
     return {
       signUpForm: {
-        // username: "",
-        // nickname: "",
-        // sex: "男",
-        // pass: "",
-        // checkPass: "",
-        // role: "student",
-        // captcha: "",
-        username: "987654",
-        nickname: "张三",
-        pass: "123123",
-        checkPass: "123123",
+        username: "",
+        nickname: "",
+        sex: "男",
+        pass: "",
+        checkPass: "",
         role: "student",
-        captcha: "1234",
+        captcha: "",
+        // username: "987654",
+        // nickname: "张三",
+        // pass: "123123",
+        // checkPass: "123123",
+        // role: "student",
+        // captcha: "1234",
       },
       rules: {
         username: [
@@ -157,26 +157,57 @@ export default {
         // 请求后端
         this.$axios({
           method: "post",
-          url: "/api/users/public/register",
+          url: "/users/public/register",
           data,
-        })
-          .then((response) => {
-            console.log(response);
-            if (response.data.code === 200) {
-              // this.$router.push({
-              //   name: "index",
-              // });
-            } else {
-              this.renderResult(response.data);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            this.notifyException();
-          });
+        }).then((r) => {
+          console.log(r);
+          if (r.code === 200) {
+            this.$notify.success("注册成功！请登录！");
+            setTimeout(
+              this.$router.push({
+                name: "/login",
+              }),
+              2000
+            );
+          } else {
+            this.renderResult(r.code);
+          }
+        });
 
         // 更新验证码
         this.changeCaptcha();
+      });
+    },
+    renderResult(code) {
+      console.log(code);
+      if (code >= 10300) {
+        if (code == 10301) {
+          this.notifyResult("未输入验证码！");
+        } else if (code == 10302) {
+          this.notifyResult("验证码不正确！");
+        } else if (code == 10303) {
+          this.notifyResult("验证码已失效！请刷新");
+        } else {
+          this.notifyResult("验证码异常！请稍后重试！");
+        }
+      }
+      if (code >= 10200) {
+        if (code == 10201) {
+          this.notifyResult("您输入的密码不正确！");
+        } else if (code == 10202) {
+          this.notifyResult("您输入用户不存在！");
+        } else if (code == 10202) {
+          this.notifyResult("该账号已登录，请勿重复登录！");
+        }
+      }
+    },
+
+    notifyResult(message) {
+      this.$notify({
+        title: "登录失败",
+        message,
+        type: "warning",
+        duration: 2000,
       });
     },
     resetForm(formName) {

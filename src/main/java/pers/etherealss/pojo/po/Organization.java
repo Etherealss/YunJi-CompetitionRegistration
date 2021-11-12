@@ -1,13 +1,12 @@
 package pers.etherealss.pojo.po;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-
-import java.io.Serializable;
-
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 /**
  * @author wtk
@@ -31,12 +30,22 @@ public class Organization implements Serializable {
     /**
      * 所属学校
      */
-    private String affiliatedSchools;
+    private String affiliatedSchool;
 
     /**
      * 联系人
      */
-    private String contactPerson;
+    private Integer managerId;
+
+    /**
+     * 联系人
+     */
+    private Integer creatorId;
+
+    /**
+     * 联系人
+     */
+    private String managerName;
 
     /**
      * 联系方式

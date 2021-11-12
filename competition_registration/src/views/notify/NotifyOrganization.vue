@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="notifyTeamTitle">组队信息</div>
+    <div class="notifyOrgTitle">组织信息</div>
     <el-empty
-      description="暂无组队信息"
+      description="暂无组织信息"
       v-show="notifications.length == 0"
     ></el-empty>
     <div
-      class="notifyTeamBody"
+      class="notifyOrgBody"
       v-for="(item, index) in notifications"
       :key="index"
     >
@@ -28,14 +28,17 @@
           <!-- {{ getNotifyMessage(item.message, item.elements, item.type) }} -->
         </div>
       </div>
-      <div class="notifyActions" v-if="item.hasRead == true">
+      <div
+        class="notifyActions"
+        v-if="item.hasRead || item.type == 'ResponseAddOrg'"
+      >
         <el-button size="small" plain>删除</el-button>
       </div>
-      <div class="notifyActions" v-else-if="(item.type = 'RequestAddTeam')">
-        <el-button type="success" size="small" @click="respAddTeam(item, true)"
+      <div class="notifyActions" v-else-if="item.type == 'RequestAddOrg'">
+        <el-button type="success" size="small" @click="respAddOrg(item, true)"
           >同意</el-button
         >
-        <el-button size="small" plain @click="respAddTeam(item, false)"
+        <el-button size="small" plain @click="respAddOrg(item, false)"
           >拒绝</el-button
         >
       </div>
@@ -56,7 +59,11 @@ export default {
       if (elements.length == 0) {
         return message;
       }
-      if (type == "RequestAddTeam" || type == "LeaveTeam" || type == "ResponseAddTeam") {
+      if (
+        type == "RequestAddOrg" ||
+        type == "LeaveOrg" ||
+        type == "ResponseAddOrg"
+      ) {
         let s1 =
           "<span class='notifyElement' @click=\"doRoute('/users/profile/" +
           elements[0].target.id +
@@ -74,10 +81,10 @@ export default {
     doRoute(path) {
       this.$doRoute(path);
     },
-    respAddTeam(item, action) {
+    respAddOrg(item, action) {
       this.$axios({
         method: "post",
-        url: "/teams/respAddTeam",
+        url: "/organizations/respAddOrg",
         data: {
           notificationId: item.id,
           action,
@@ -86,13 +93,13 @@ export default {
         if (r.code == 200) {
           this.$notify.success({
             title: "成功",
-            message: "已同意对方加入队伍！",
+            message: "已同意对方加入组织！",
           });
           item.hasRead = true;
         } else if (r.code == 10501) {
           this.$notify.error({
             title: "错误",
-            message: "用户已经在队伍中",
+            message: "用户已经在组织中",
           });
         }
       });
@@ -101,7 +108,7 @@ export default {
   mounted() {
     this.$axios({
       method: "get",
-      url: "/notifications/teams",
+      url: "/notifications/organizations",
     }).then((r) => {
       if (r.code == 200) {
         this.notifications = r.data;
@@ -111,8 +118,8 @@ export default {
 };
 </script>
 
-<style scoped>
-.notifyTeamTitle {
+<style>
+.notifyOrgTitle {
   font-size: 16px;
   font-weight: 600;
   color: #222226;
@@ -121,7 +128,7 @@ export default {
   line-height: 22px;
 }
 
-.notifyTeamBody {
+.notifyOrgBody {
   position: relative;
   padding: 16px 0;
   border-bottom: 1px solid #f0f0f2;

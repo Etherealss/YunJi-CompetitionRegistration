@@ -2,6 +2,7 @@ package pers.etherealss.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import pers.etherealss.pojo.po.Organization;
+import pers.etherealss.pojo.vo.Msg;
 
 import java.util.List;
 
@@ -16,4 +17,8 @@ import java.util.List;
 public interface OrganizationService extends IService<Organization> {
 
     List<Organization> getMyOrganizations(Integer officialId);
+
+    Msg<?> requestAddOrg(Integer userId, Integer orgId);
+
+    Msg<?> respAddOrg(Integer userId, Long notiId, Boolean action);
 }

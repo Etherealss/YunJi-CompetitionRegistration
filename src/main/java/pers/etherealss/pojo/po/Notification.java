@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import pers.etherealss.common.enums.NotifyType;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -58,4 +59,65 @@ public class Notification implements Serializable {
     private Boolean hasRead;
 
     private Date createTime;
+
+    public Notification(NotifyType type) {
+        this.title = type.getTitle();
+        this.type = type.getType();
+        this.displayPosition = type.getPosition();
+    }
+
+    public Notification(Integer senderId, Integer receiverId, String message, NotifyType type) {
+        this(type);
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.message = message;
+    }
+
+    public Notification() {
+    }
+
+    public Notification setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Notification setSenderId(Integer senderId) {
+        this.senderId = senderId;
+        return this;
+    }
+
+    public Notification setReceiverId(Integer receiverId) {
+        this.receiverId = receiverId;
+        return this;
+    }
+
+    public Notification setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public Notification setMessage(String message) {
+        this.message = message;
+        return this;
+    }
+
+    public Notification setDisplayPosition(String displayPosition) {
+        this.displayPosition = displayPosition;
+        return this;
+    }
+
+    public Notification setType(String type) {
+        this.type = type;
+        return this;
+    }
+
+    public Notification setHasRead(Boolean hasRead) {
+        this.hasRead = hasRead;
+        return this;
+    }
+
+    public Notification setCreateTime(Date createTime) {
+        this.createTime = createTime;
+        return this;
+    }
 }

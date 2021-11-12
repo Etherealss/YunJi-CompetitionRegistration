@@ -34,8 +34,8 @@ public interface UserMapper extends BaseMapper<User> {
 
     /**
      * 查询用户权限
-     * @param username
+     * @param id
      * @return
      */
-    List<String> selectUserPermissions(@Param("username") String username);
+    List<String> selectUserPermissions(@Param("id") Integer id);
 }

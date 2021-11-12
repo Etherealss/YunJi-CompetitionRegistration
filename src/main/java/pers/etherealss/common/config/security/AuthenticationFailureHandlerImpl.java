@@ -45,6 +45,7 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
         Msg<?> msg = new Msg<>();
         msg.setCode(captchaException.getCode());
         msg.setMessage(captchaException.getMsg());
+        response.setStatus(200);
         ResponseUtil.send(response, msg);
         log.trace("登录失败:" + captchaException.getMsg() + captchaException.getMessage());
     }

@@ -44,7 +44,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         // 获取权限
-        List<String> pers = userMapper.selectUserPermissions(username);
+        List<String> pers = userMapper.selectUserPermissions(user.getId());
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>(pers.size());
         for (String authority : pers) {
             grantedAuthorities.add(new SimpleGrantedAuthority(authority));

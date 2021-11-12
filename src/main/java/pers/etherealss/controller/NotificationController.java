@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pers.etherealss.common.enums.NotifyPosition;
 import pers.etherealss.pojo.bo.NotificationBo;
 import pers.etherealss.pojo.po.User;
 import pers.etherealss.pojo.vo.Msg;
@@ -33,7 +34,7 @@ public class NotificationController {
     @GetMapping("/teams")
     public Msg<List<NotificationBo>> getTeamNotifications(HttpServletRequest request) {
         User user = TokenUtil.getUserByToken(request);
-        return Msg.ok(notificationService.getTeamNotifications(user.getId()));
+        return Msg.ok(notificationService.getNotifications(user.getId(), NotifyPosition.TEAM));
     }
 
     /**
@@ -44,7 +45,7 @@ public class NotificationController {
     @GetMapping("/competitions")
     public Msg<List<NotificationBo>> getCompetitionNotifications(HttpServletRequest request) {
         User user = TokenUtil.getUserByToken(request);
-        return Msg.ok(notificationService.getCompetitionNotifications(user.getId()));
+        return Msg.ok(notificationService.getNotifications(user.getId(), NotifyPosition.COMPETITION));
     }
 
     /**
@@ -55,7 +56,13 @@ public class NotificationController {
     @GetMapping("/systems")
     public Msg<List<NotificationBo>> getSystemNotifications(HttpServletRequest request) {
         User user = TokenUtil.getUserByToken(request);
-        return Msg.ok(notificationService.getSystemNotifications(user.getId()));
+        return Msg.ok(notificationService.getNotifications(user.getId(), NotifyPosition.SYSTEM));
+    }
+
+    @GetMapping("/organizations")
+    public Msg<List<NotificationBo>> getOrgNotifications(HttpServletRequest request) {
+        User user = TokenUtil.getUserByToken(request);
+        return Msg.ok(notificationService.getNotifications(user.getId(), NotifyPosition.ORGANIZATION));
     }
 
 }

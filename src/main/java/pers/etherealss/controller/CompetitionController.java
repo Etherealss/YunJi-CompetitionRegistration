@@ -17,7 +17,7 @@ import pers.etherealss.service.CompetitionService;
 import pers.etherealss.utils.TokenUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.Map;
 
 /**
  * 赛事
@@ -97,7 +97,7 @@ public class CompetitionController {
     }
 
     @PostMapping("/create")
-    public Msg<Competition> addCompetition(HttpServletRequest req,  @RequestBody Competition competition) {
+    public Msg<Competition> addCompetition(HttpServletRequest req, @RequestBody Competition competition) {
         User user = TokenUtil.getUserByToken(req);
         log.debug("发布新比赛：{}", competition);
         compService.create(user, competition);
@@ -105,10 +105,12 @@ public class CompetitionController {
     }
 
     @Secured("ROLE_admin")
-    @GetMapping("/review")
-    public Msg<List<Competition>> get4Review() {
-        Msg<List<Competition>> review = compService.getPage4Review();
-        return review;
+    @GetMapping("/review/pages/{curPage}")
+    public Msg<PageBo<Competition>> get4Review(
+            @PathVariable(value = "curPage") int curPage,
+            @MatrixVariable Map<String, String> matrixVars,
+            @MatrixVariable(value = "offset", defaultValue = "10") int offset) {
+        return compService.getPage4Review(curPage, offset);
     }
 
 }

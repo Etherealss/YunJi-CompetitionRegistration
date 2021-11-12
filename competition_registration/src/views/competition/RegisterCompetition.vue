@@ -102,10 +102,7 @@ export default {
             } else {
               this.$notify.success("出现错误！");
             }
-          });
-          this.$message({
-            type: "success",
-            message: "保存成功!",
+            this.loading = false;
           });
           this.showCompRegisterDrawer = false;
         })

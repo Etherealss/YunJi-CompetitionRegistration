@@ -91,6 +91,12 @@ public class GlobalExceptionHandler {
         return new Msg<>(e);
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(CaptchaException.class)
+    public Msg<Object> handleCaptchaException(CaptchaException e) {
+        return new Msg<>(e.getCode(), e.getMsg());
+    }
+
     /**
      * MissingServletRequestParameterException 前后端交接的接口参数缺失
      */
@@ -139,7 +145,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public Msg<Object> handleException(Exception e) {
-        log.warn("[全局异常处理器]其他异常：" + e.getMessage());
+        log.warn("[全局异常处理器]其他异常：", e);
         return new Msg<>(e);
     }
 }

@@ -13,10 +13,12 @@ import UserProfile from '@/views/user_center/UserProfile'
 import UserCompEntered from '@/views/user_center/UserCompEntered'
 import UserCompWatched from '@/views/user_center/UserCompWatched'
 import UserTeam from '@/views/user_center/UserTeam'
+import UserOrganization from '@/views/user_center/UserOrganization'
 import Notify from '@/views/notify/Notify'
 import NotifyTeam from '@/views/notify/NotifyTeam'
 import NotifySystem from '@/views/notify/NotifySystem'
 import NotifyCompetition from '@/views/notify/NotifyCompetition'
+import NotifyOrganization from '@/views/notify/NotifyOrganization'
 import Competition from '@/views/competition/Competition'
 import CreateCompetition from '@/views/competition/CreateCompetition'
 import AdminCenter from '@/views/admin/AdminCenter'
@@ -69,6 +71,7 @@ const router = new VueRouter({
 			name: 'register',
 			component: Register
 		},
+		// /users
 		{// 嵌套路由：官网 https://router.vuejs.org/zh/guide/essentials/nested-routes.html
 			path: '/users',
 			component: UserCenter,
@@ -88,9 +91,14 @@ const router = new VueRouter({
 				{
 					path: "teams",
 					component: UserTeam,
+				},
+				{
+					path: "organizations",
+					component: UserOrganization,
 				}
 			]
 		},
+		// /notify
 		{
 			path: '/notify',
 			component: Notify,
@@ -107,6 +115,10 @@ const router = new VueRouter({
 					path: "competition",
 					component: NotifyCompetition,
 				},
+				{
+					path: "organizations",
+					component: NotifyOrganization,
+				},
 			]
 		},
 		{
@@ -117,6 +129,7 @@ const router = new VueRouter({
 			path: '/create/competitions',
 			component: CreateCompetition,
 		},
+		// admins
 		{
 			path: '/admins',
 			component: AdminCenter,

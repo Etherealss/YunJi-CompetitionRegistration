@@ -27,26 +27,14 @@ public interface NotificationService extends IService<Notification> {
      */
     void hasRead(Long notificationId);
 
-    /**
-     * 获取组队通知消息
-     * @param userId
-     * @return
-     */
-    List<NotificationBo> getTeamNotifications(Integer userId);
 
     /**
-     * 获取赛事通知消息
+     * 获取消息
      * @param userId
+     * @param dispalyPosition
      * @return
      */
-    List<NotificationBo> getCompetitionNotifications(Integer userId);
-
-    /**
-     * 获取系统通知消息
-     * @param userId
-     * @return
-     */
-    List<NotificationBo> getSystemNotifications(Integer userId);
+    List<NotificationBo> getNotifications(Integer userId, String dispalyPosition);
 
     /**
      * 通知队员 已报名比赛

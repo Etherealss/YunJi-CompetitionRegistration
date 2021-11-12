@@ -6,11 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pers.etherealss.common.enums.ApiInfo;
+import pers.etherealss.common.enums.UserRole;
 import pers.etherealss.common.exception.MissingParamException;
+import pers.etherealss.pojo.po.Official;
 import pers.etherealss.pojo.po.Student;
 import pers.etherealss.pojo.po.User;
 import pers.etherealss.pojo.vo.Msg;
 import pers.etherealss.service.CaptchaService;
+import pers.etherealss.service.OfficialService;
 import pers.etherealss.service.StudentService;
 import pers.etherealss.service.UserService;
 import pers.etherealss.utils.GetParamUtil;
@@ -19,6 +22,7 @@ import pers.etherealss.utils.TokenUtil;
 import pers.etherealss.utils.captcha.CaptchaUtil;
 import pers.etherealss.utils.simple.FileUtil;
 import pers.etherealss.utils.simple.ImgUtil;
+import pers.etherealss.utils.simple.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,6 +47,8 @@ public class UserController {
     @Autowired
     private StudentService studentService;
     @Autowired
+    private OfficialService officialService;
+    @Autowired
     private CaptchaService captchaService;
 
     @PostMapping("/login")
@@ -60,8 +66,13 @@ public class UserController {
         log.trace("获取当前用户信息");
         User user = TokenUtil.getUserByToken(request);
         user = userService.getById(user.getId());
-        Student student = studentService.getById(user.getId());
-        user.setUserInfo(student);
+        if (UserRole.STUDENT.equals(user.getUserRole())) {
+            Student student = studentService.getById(user.getId());
+            user.setUserInfo(student);
+        } else if (UserRole.OFFICICAL.equals(user.getUserRole())) {
+            Official official = officialService.getById(user.getId());
+            user.setUserInfo(official);
+        }
         return Msg.ok(user);
     }
 
@@ -120,6 +131,9 @@ public class UserController {
      */
     @GetMapping("/public/avatar/{avatarPath}")
     public void getUserAvatarStream(HttpServletResponse response, @PathVariable String avatarPath) throws IOException {
+        if (StringUtil.isBlank(avatarPath)) {
+            throw new MissingParamException("头像路径缺失");
+        }
         BufferedInputStream userAvatar = userService.getUserAvatar(avatarPath);
         ResponseUtil.sendFile(response, userAvatar);
 //        String data = ImgUtil.getImg4Base64(FileUtil.bytes(userAvatar));

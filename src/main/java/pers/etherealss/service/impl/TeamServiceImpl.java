@@ -10,10 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 import pers.etherealss.common.enums.*;
 import pers.etherealss.common.exception.NotFoundException;
 import pers.etherealss.common.exception.SimpleException;
+import pers.etherealss.facade.NotificationFacade;
 import pers.etherealss.manage.NotificationElementSaver;
-import pers.etherealss.mapper.*;
+import pers.etherealss.mapper.NotificationMapper;
+import pers.etherealss.mapper.StudentMapper;
+import pers.etherealss.mapper.TeamMapper;
+import pers.etherealss.mapper.UserMapper;
 import pers.etherealss.pojo.bo.TeamBo;
-import pers.etherealss.pojo.po.*;
+import pers.etherealss.pojo.po.Notification;
+import pers.etherealss.pojo.po.Student;
+import pers.etherealss.pojo.po.Team;
+import pers.etherealss.pojo.po.User;
 import pers.etherealss.service.TeamService;
 import pers.etherealss.utils.UUIDUtil;
 
@@ -37,9 +44,9 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team> implements Te
     @Autowired
     private StudentMapper studentMapper;
     @Autowired
-    private NotificationMapper notiMapper;
+    private NotificationFacade ntFacade;
     @Autowired
-    private NotificationElementMapper elementMapper;
+    private NotificationMapper notiMapper;
     @Autowired
     private NotificationElementSaver elementSaver;
     @Autowired
@@ -113,13 +120,10 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team> implements Te
 
         // 向队长发送请求通知
         String message = "用户 {} 请求加入你的队伍：{}";
-        Notification no = new Notification();
-        no.setSenderId(requestId);
-        no.setReceiverId(team.getLeaderId());
-        no.setMessage(message);
-        no.setTitle(NotifyTitle.REQUEST_ADD_TEAM);
-        no.setType(NotifyType.REQUEST_ADD_TEAM);
-        no.setDisplayPosition(NotifyPosition.TEAM);
+        Notification no = new Notification(NotifyType.REQUEST_ADD_TEAM)
+                .setSenderId(requestId)
+                .setReceiverId(team.getLeaderId())
+                .setMessage(message);
         notiMapper.insert(no);
 
         elementSaver.save(no,
@@ -132,26 +136,33 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team> implements Te
     public void respAddTeam(User leader, Long notificationId, Boolean isAgree) {
         log.debug("leaderId = {}, notifyId = {}, isAgree = {}", leader.getId(), notificationId, isAgree);
         // 获取通知
-        Notification notification = getNotification(notificationId);
+        Notification notification = ntFacade.getNotification4NotNull(notificationId);
+        // 从通知获取请求加入队伍的用户
+        Integer requesterId = notification.getSenderId();
+        Integer teamId = ntFacade.getElementTargetId4Int(notificationId, 1);
         if (isAgree) {
-            // 从通知获取请求加入队伍的用户
-            Integer requesterId = notification.getSenderId();
-            // 获取通知元素，以获取队伍id
-            QueryWrapper<NotificationElement> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("notification_id", notificationId).eq("seq", 1);
-            NotificationElement element = elementMapper.selectOne(queryWrapper);
-            // Math.toIntExact函数返回long参数的值。如果结果溢出int则抛出异常。
-            Integer teamId = Math.toIntExact(element.getTargetId());
-
             // 是否已加入
             boolean hasJoined = hasJoined(requesterId, teamId);
             if (hasJoined) {
                 throw new SimpleException(ApiInfo.TEAM_HAS_JIONED);
             }
+            // 添加新成员
             teamMapper.insertNewMember(teamId, requesterId);
         }
         // 设为已读
-        notiMapper.hasRead(notificationId);
+        ntFacade.setHasRead(notificationId);
+
+        String message = isAgree ? "用户 {} 同意你加入队伍：{}" : "用户 {} 拒绝你加入队伍：{}";
+        Notification no = new Notification(NotifyType.RESPONSE_ADD_TEAM)
+                .setSenderId(leader.getId())
+                .setReceiverId(requesterId)
+                .setMessage(message);
+        notiMapper.insert(no);
+
+        elementSaver.save(no,
+                NotificationElementType.USER.getKey(), leader.getId(),
+                NotificationElementType.TEAM.getKey(), teamId
+        );
     }
 
     /**
@@ -207,14 +218,6 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team> implements Te
             teamBo.setMembers(new ArrayList<>(0));
         }
         return teamBo;
-    }
-
-    private Notification getNotification(Long notificationId) {
-        Notification notification = notiMapper.selectById(notificationId);
-        if (notification == null) {
-            throw new NotFoundException("通知不存在");
-        }
-        return notification;
     }
 
     /**

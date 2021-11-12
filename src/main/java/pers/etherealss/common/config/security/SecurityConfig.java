@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 import pers.etherealss.common.enums.ApiInfo;
 import pers.etherealss.common.filter.LoginCaptchaFilter;
 import pers.etherealss.pojo.vo.Msg;
@@ -153,5 +155,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             msg.setMessage(authException.getMessage());
             ResponseUtil.send(response, msg);
         });
+    }
+
+    /**
+     * 开启矩阵变量
+     * @return
+     */
+    @Bean
+    public HttpFirewall allowUrlSemicolonHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowSemicolon(true);
+        return firewall;
     }
 }

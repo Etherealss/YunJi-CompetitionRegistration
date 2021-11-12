@@ -6,8 +6,6 @@ import pers.etherealss.pojo.po.Competition;
 import pers.etherealss.pojo.po.User;
 import pers.etherealss.pojo.vo.Msg;
 
-import java.util.List;
-
 /**
  * <p>
  *  服务类
@@ -26,7 +24,7 @@ public interface CompetitionService extends IService<Competition> {
      * 获取审核数据
      * @return
      */
-    Msg<List<Competition>> getPage4Review();
+    Msg<PageBo<Competition>> getPage4Review(int curPage, int offset);
 
     /**
      * 获取审核数据

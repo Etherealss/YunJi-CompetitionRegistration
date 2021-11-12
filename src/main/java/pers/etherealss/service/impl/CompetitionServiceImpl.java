@@ -9,7 +9,7 @@ import pers.etherealss.common.enums.PublishState;
 import pers.etherealss.common.exception.NotFoundException;
 import pers.etherealss.common.exception.SimpleException;
 import pers.etherealss.common.strategy.page.PageContext;
-import pers.etherealss.common.strategy.page.impl.QueryByDescTimeStragety;
+import pers.etherealss.common.strategy.page.impl.CompetitionQueryStragety;
 import pers.etherealss.mapper.CompetitionMapper;
 import pers.etherealss.mapper.OfficialMapper;
 import pers.etherealss.mapper.OrganizationMapper;
@@ -20,8 +20,6 @@ import pers.etherealss.pojo.po.Organization;
 import pers.etherealss.pojo.po.User;
 import pers.etherealss.pojo.vo.Msg;
 import pers.etherealss.service.CompetitionService;
-
-import java.util.List;
 
 /**
  * @author wtk
@@ -47,16 +45,22 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
 
     @Override
     public PageBo<Competition> getPageByTime(int curPage, int offset) {
-        PageContext<Competition> pageContext = new PageContext<>(compMapper, new QueryByDescTimeStragety<>());
-        PageBo<Competition> pageBo = pageContext.bulidPage(curPage, offset, "create_time");
+        PageContext<Competition> pageContext = new PageContext<>(compMapper, new CompetitionQueryStragety<>());
+        PageBo<Competition> pageBo = pageContext.bulidPage(curPage, offset);
         return pageBo;
     }
 
     @Override
-    public Msg<List<Competition>> getPage4Review() {
-        QueryWrapper<Competition> m = new QueryWrapper<>();
-        List<Competition> cs = compMapper.selectList(m.eq("state", 1));
-        return Msg.ok(cs);
+    public Msg<PageBo<Competition>> getPage4Review(int curPage, int offset) {
+        PageContext<Competition> pageContext = new PageContext<>(compMapper, queryWrapper -> {
+            // 升序排列，state为1表示待审核，排在最前
+            queryWrapper.orderByAsc("state");
+            // 列名降序，最新在最前
+            queryWrapper.orderByDesc("update_time", "create_time");
+        });
+        PageBo<Competition> pageBo = pageContext.bulidPage(curPage, offset);
+
+        return Msg.ok(pageBo);
     }
 
     @Override

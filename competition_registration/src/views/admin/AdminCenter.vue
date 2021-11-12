@@ -5,12 +5,10 @@
       ><el-aside
         width="200px"
         id="adminCenterAside"
-        style="background-color: #545c64"
       >
         <AdminCenterMenu />
       </el-aside>
-      <el-main id="adminBody">
-        <router-view></router-view> </el-main
+      <el-main id="adminBody"> <router-view></router-view> </el-main
     ></el-container>
   </div>
 </template>
@@ -24,4 +22,14 @@ export default {
 </script>
 
 <style>
+#adminCenter {
+  background: rgb(255, 255, 255);
+}
+#adminCenterAside {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 65px;
+  left: 0;
+  height: calc(100% - 65px);
+}
 </style>

@@ -62,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setPassword(encode);
         // 头像
         if (Strings.isBlank(user.getAvatar())) {
-            user.setAvatar(resourcePathProperties.getAvatar() + user.getUsername());
+            user.setAvatar("/default-boy.png");
         }
 
         int insert = userMapper.insert(user);
@@ -77,6 +77,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                     resourcePathProperties.getAvatar() + avatar);
             return inputStream;
         } catch (IOException e) {
+            log.debug("avatar: {}", avatar);
             throw new ServiceException("IO异常");
         }
     }

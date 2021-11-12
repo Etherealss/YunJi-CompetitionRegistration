@@ -1,6 +1,6 @@
 <template>
   <div id="headerLoggedBody">
-    <div id="notifyBtn" @click="doRoute('/notify/team')">
+    <div id="notifyBtn" @click="doRoute('/notify/system')">
       <el-badge is-dot class="item">
         <el-button
           class="share-button"

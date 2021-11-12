@@ -96,7 +96,7 @@ export default {
         data: this.createCompForm,
       }).then((r) => {
         if (r.code == 200) {
-          this.$notify.success("发布成功！");
+          this.$notify.success("提交成功！等待审核！");
           this.$doRoute("/index");
         }
       });

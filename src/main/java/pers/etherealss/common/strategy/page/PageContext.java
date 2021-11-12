@@ -3,7 +3,6 @@ package pers.etherealss.common.strategy.page;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import lombok.extern.slf4j.Slf4j;
-import pers.etherealss.common.enums.PublishState;
 import pers.etherealss.common.exception.ErrorParamException;
 import pers.etherealss.common.strategy.page.impl.DefaultQueryStragety;
 import pers.etherealss.pojo.bo.PageBo;
@@ -48,10 +47,9 @@ public class PageContext<T> {
      * 获取分页
      * @param curPage
      * @param offset
-     * @param keywords
      * @return
      */
-    public PageBo<T> bulidPage(int curPage, int offset, String... keywords) {
+    public PageBo<T> bulidPage(int curPage, int offset) {
         // 计算查询索引，其实页面是第1页，但数据库第一条记录的索引是0，所以减1
         int start = (curPage - 1) * offset;
 
@@ -79,11 +77,9 @@ public class PageContext<T> {
         获取查询逻辑QueryWrapper，并查询页面数据
          */
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("update_time", "create_time");
-        queryWrapper.eq("state", PublishState.PUBLISHED);
         // 添加分页语句
         queryWrapper.last(" limit " + start + ", " + offset);
-        queryStrategy.definePageData(queryWrapper, keywords);
+        queryStrategy.definePageData(queryWrapper);
         // 查询并保存在page对象中
         page.setPageData(baseMapper.selectList(queryWrapper));
 

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @DisplayName("OrganizationMapperTest测试")
@@ -15,5 +16,17 @@ class OrganizationMapperTest {
     private OrganizationMapper oMapper;
     @Test
     void testSelectByOfficialId() {
+    }
+
+    @Test
+    void testselectExistMemberInOrg() {
+        Long aLong = oMapper.selectExistMemberInOrg(5, 1);
+        log.debug("{}", aLong);
+    }
+
+    @Transactional
+    @Test
+    void testinsertNewMember() {
+        oMapper.insertNewMember(5,5);
     }
 }

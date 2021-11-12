@@ -22,7 +22,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .profileBody {
   padding: 20px;
   margin-bottom: 20px;
