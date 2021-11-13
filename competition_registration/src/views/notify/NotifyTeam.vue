@@ -28,7 +28,7 @@
           <!-- {{ getNotifyMessage(item.message, item.elements, item.type) }} -->
         </div>
       </div>
-      <div class="notifyActions" v-if="item.hasRead == true">
+      <div class="notifyActions" v-if="item.hasRead == false">
         <el-button size="small" plain>删除</el-button>
       </div>
       <div class="notifyActions" v-else-if="(item.type = 'RequestAddTeam')">
@@ -56,6 +56,7 @@ export default {
       if (elements.length == 0) {
         return message;
       }
+      console.log("elements:", elements);
       if (type == "RequestAddTeam" || type == "LeaveTeam" || type == "ResponseAddTeam") {
         let s1 =
           "<span class='notifyElement' @click=\"doRoute('/users/profile/" +

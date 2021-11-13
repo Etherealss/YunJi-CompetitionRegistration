@@ -59,11 +59,12 @@ public class CompetitionController {
     @GetMapping("/public/pages/{curPage}")
     public Msg<PageBo<Competition>> getPageCompetition(
             @PathVariable(value = "curPage") int curPage,
-            @MatrixVariable(value = "orderBy", pathVar = "curPage", required = false) String orderBy) {
+            @MatrixVariable(value = "orderBy",
+                    pathVar = "curPage", required = false) String orderBy) {
         log.debug("获取分页数据：当前页curPage = {}, orderBy = {}", curPage, orderBy);
         PageBo<Competition> page = null;
         if (orderBy == null) {
-            page = compService.getPage(curPage, PAGE_SIZE);
+            page = compService.getPageByTime(curPage, PAGE_SIZE);
         } else if (PageOrderBy.TIME.equals(orderBy)) {
             page = compService.getPageByTime(curPage, PAGE_SIZE);
         } else {

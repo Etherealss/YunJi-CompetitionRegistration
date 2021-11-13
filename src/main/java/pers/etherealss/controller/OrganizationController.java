@@ -51,5 +51,14 @@ public class OrganizationController {
         User user = TokenUtil.getUserByToken(req);
         return service.respAddOrg(user.getId(), notificationId, action);
     }
+
+    @Secured("ROLE_official")
+    @PostMapping("reviewComp")
+    public Msg<?> reviewComp(HttpServletRequest req, @RequestBody Map<String, String> map) {
+        User user = TokenUtil.getUserByToken(req);
+        Long notiId = Long.parseLong(map.get("notificationId"));
+        Boolean action = Boolean.parseBoolean(map.get("action"));
+        return service.reviewComp(user.getId(), notiId, action);
+    }
 }
 

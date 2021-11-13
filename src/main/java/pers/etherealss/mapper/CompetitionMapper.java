@@ -1,5 +1,6 @@
 package pers.etherealss.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import pers.etherealss.pojo.po.Competition;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -10,5 +11,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 @Repository
 public interface CompetitionMapper extends BaseMapper<Competition> {
+
+
+    void updateState(@Param("compId") Integer compId, @Param("state") Integer state);
 
 }

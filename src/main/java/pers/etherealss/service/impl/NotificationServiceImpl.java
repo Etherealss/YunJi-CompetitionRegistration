@@ -6,7 +6,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pers.etherealss.common.enums.*;
+import pers.etherealss.common.enums.NotificationElementType;
+import pers.etherealss.common.enums.NotifyPosition;
+import pers.etherealss.common.enums.NotifyType;
 import pers.etherealss.common.exception.NotFoundException;
 import pers.etherealss.common.exception.UnsupportedOperationException;
 import pers.etherealss.manage.NotificationElementSaver;
@@ -77,6 +79,14 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
                 .eq("display_position", dispalyPosition)
                 .orderByDesc("create_time");
         List<Notification> notifications = notiMapper.selectList(queryWrapper);
+
+//        for (Notification notification : notifications) {
+//            notification.setHasRead(true);
+//            UpdateWrapper<Notification> updateWrapper = new UpdateWrapper<>();
+//            updateWrapper.eq("id", notification.getId()).eq("has_read", false);
+//            notiMapper.update(notification, updateWrapper);
+//        }
+
         return wrapNotifications(notifications);
     }
 

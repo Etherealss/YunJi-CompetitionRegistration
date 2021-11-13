@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="notifyCompetitionTitle">赛事信息</div>
-    <el-empty description="暂无赛事信息" v-show="notifications.length == 0"></el-empty>
+    <el-empty
+      description="暂无赛事信息"
+      v-show="notifications.length == 0"
+    ></el-empty>
     <div
       class="notifyCompetitionBody"
       v-for="(item, index) in notifications"
@@ -23,14 +26,21 @@
           v-html="getNotifyMessage(item.message, item.elements, item.type)"
         ></div>
       </div>
-      <div class="notifyCompetitionActions" v-if="isOfficial">
+
+      <div
+        class="notifyCompetitionActions"
+        v-if="isOfficial"
+      >
         <el-button size="small" plain>删除</el-button>
       </div>
-      <div class="notifyCompetitionActions" v-else>
-        <el-button type="success" size="small" @click="respAddTeam(item, true)"
+      <div class="notifyCompetitionActions" v-if="item.type == 'ManagerReviewCompetition'">
+        <el-button
+          type="success"
+          size="small"
+          @click="respReviewComp(item, true)"
           >同意</el-button
         >
-        <el-button size="small" plain @click="respAddTeam(item, false)"
+        <el-button size="small" plain @click="respReviewComp(item, false)"
           >拒绝</el-button
         >
       </div>
@@ -54,7 +64,12 @@ export default {
       if (elements.length == 0) {
         return message;
       }
-      if (type == "RegisterCompetition" || type == "NewRegisterCompetition") {
+      if (
+        type == "RegisterCompetition" ||
+        type == "NewRegisterCompetition" ||
+        type == "ManagerReviewCompetition" ||
+        type == "ResponseReviewCompetition"
+      ) {
         let s1 =
           "<span class='notifyCompetitionElement' @click=\"doRoute('/users/teams')\">" +
           elements[0].target.name +
@@ -72,16 +87,35 @@ export default {
     doRoute(path) {
       this.$doRoute(path);
     },
+    respReviewComp(noti, action) {
+      console.log(noti);
+      this.$axios({
+        method: "POST",
+        url: "/organizations/reviewComp",
+        data: {
+          notificationId: noti.id,
+          action,
+        },
+      }).then((r) => {
+        if (r.code == 200) {
+          this.$notify.success("操作成功！");
+        }
+      });
+      this.getPageData();
+    },
+    getPageData() {
+      this.$axios({
+        method: "get",
+        url: "/notifications/competitions",
+      }).then((r) => {
+        if (r.code == 200) {
+          this.notifications = r.data;
+        }
+      });
+    },
   },
   mounted() {
-    this.$axios({
-      method: "get",
-      url: "/notifications/competitions",
-    }).then((r) => {
-      if (r.code == 200) {
-        this.notifications = r.data;
-      }
-    });
+    this.getPageData();
   },
 };
 </script>

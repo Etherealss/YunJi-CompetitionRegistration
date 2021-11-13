@@ -5,19 +5,17 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pers.etherealss.common.enums.ApiInfo;
+import pers.etherealss.common.enums.NotificationElementType;
+import pers.etherealss.common.enums.NotifyType;
 import pers.etherealss.common.enums.PublishState;
 import pers.etherealss.common.exception.NotFoundException;
 import pers.etherealss.common.exception.SimpleException;
 import pers.etherealss.common.strategy.page.PageContext;
 import pers.etherealss.common.strategy.page.impl.CompetitionQueryStragety;
-import pers.etherealss.mapper.CompetitionMapper;
-import pers.etherealss.mapper.OfficialMapper;
-import pers.etherealss.mapper.OrganizationMapper;
+import pers.etherealss.manage.NotificationElementSaver;
+import pers.etherealss.mapper.*;
 import pers.etherealss.pojo.bo.PageBo;
-import pers.etherealss.pojo.po.Competition;
-import pers.etherealss.pojo.po.Official;
-import pers.etherealss.pojo.po.Organization;
-import pers.etherealss.pojo.po.User;
+import pers.etherealss.pojo.po.*;
 import pers.etherealss.pojo.vo.Msg;
 import pers.etherealss.service.CompetitionService;
 
@@ -35,6 +33,12 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
     private OfficialMapper offMapper;
     @Autowired
     private OrganizationMapper orgMapper;
+    @Autowired
+    private NotificationMapper notiMapper;
+    @Autowired
+    private NotificationElementMapper elementMapper;
+    @Autowired
+    private NotificationElementSaver elementSaver;
 
     @Override
     public PageBo<Competition> getPage(int curPage, int offset) {
@@ -81,9 +85,26 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
             throw new NotFoundException("组织不存在");
         }
         competition.setOrganizationName(organization.getName());
-        competition.setCreatorId(user.getId());
-        competition.setState(1);
-        compMapper.insert(competition);
+
+
+        if (!organization.getManagerId().equals(user.getId())) {
+            competition.setState(PublishState.MANAGER_REVIEWING);
+            compMapper.insert(competition);
+            Notification n = new Notification(NotifyType.MANAGER_REVIEW_COMPETITION);
+            n.setSenderId(user.getId());
+            n.setReceiverId(organization.getManagerId());
+            String msg = "你的组织 {} 发布了赛事：{}，请审核";
+            n.setMessage(msg);
+            notiMapper.insert(n);
+            elementSaver.save(n,
+                    NotificationElementType.ORGANIZATION.getKey(), organization.getId(),
+                    NotificationElementType.COMPETITION.getKey(), competition.getId()
+            );
+        } else {
+            // 负责人发布赛事不用再次由负责人审核
+            competition.setState(PublishState.REVIEWING);
+            compMapper.insert(competition);
+        }
     }
 
     @Override

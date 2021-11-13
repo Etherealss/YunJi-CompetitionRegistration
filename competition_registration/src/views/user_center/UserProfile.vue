@@ -48,6 +48,7 @@ export default {
       let userRole = this.user.userRole;
       if (userRole == "student") {
         let studentData = this.user.userInfo;
+        console.log(studentData);
         let studentProfile = {
           title: "学生信息",
           items: [

@@ -21,4 +21,6 @@ public interface OrganizationService extends IService<Organization> {
     Msg<?> requestAddOrg(Integer userId, Integer orgId);
 
     Msg<?> respAddOrg(Integer userId, Long notiId, Boolean action);
+
+    Msg<?> reviewComp(Integer managerId, Long notiId, Boolean action);
 }

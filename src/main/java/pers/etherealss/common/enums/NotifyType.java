@@ -44,6 +44,16 @@ public enum NotifyType {
             "赛事审核",
             NotifyPosition.COMPETITION
     ),
+    MANAGER_REVIEW_COMPETITION(
+            "ManagerReviewCompetition",
+            "负责人赛事审核",
+            NotifyPosition.COMPETITION
+    ),
+    RESPONSE_MANAGER_REVIEW_COMPETITION(
+            "ResponseReviewCompetition",
+            "负责人审核结果",
+            NotifyPosition.COMPETITION
+    ),
     ;
     /** 通知类型 */
     private String type;

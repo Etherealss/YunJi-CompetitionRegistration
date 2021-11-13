@@ -8,4 +8,6 @@ public class PublishState {
     public static final int DRAFT = 0;
     public static final int REVIEWING = 1;
     public static final int PUBLISHED = 2;
+
+    public static final int MANAGER_REVIEWING = 3;
 }

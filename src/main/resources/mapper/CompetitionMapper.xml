@@ -18,5 +18,8 @@
         <result column="creator_id" property="creatorId" />
         <result column="creater_time" property="createTime" />
     </resultMap>
+    <update id="updateState">
+        UPDATE `competition` SET `state` = #{state} WHERE `id` = #{compId};
+    </update>
 
 </mapper>
